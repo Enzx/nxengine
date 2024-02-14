@@ -1,0 +1,8 @@
+.idea
+.vs
+[Bb]uild/
+[Ll]ib/
+*.vcxproj
+*.filters
+*.user
+*.sln
