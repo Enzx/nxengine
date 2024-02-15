@@ -82,7 +82,7 @@ project "glfw"
 	filter { "system:windows"}	
 		runtime "Debug"
 		symbols "on"
-		sanitize { "Address" }
+		-- sanitize { "Address" }
 		flags { "NoRuntimeChecks", "NoIncrementalLink" }
 
 	filter "configurations:Release"

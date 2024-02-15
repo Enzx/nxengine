@@ -1,6 +1,6 @@
 -- Main script for creating projects 
 
-include "premake_functions.lua"
+--include "premake_functions.lua"
 
 
 	
@@ -21,4 +21,4 @@ workspace "NxEngine"
 -- Projects
 
 include "vendors/GLFW/build.lua"
-include "nx/build.lua"
+include "nx_engine/build.lua"

@@ -2,23 +2,29 @@ project "nx_engine"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++20"
+	toolset "msc"
 		
-	location("%{wks.location}/hello_world")
-	
 	targetdir "%{wks.location}/build/bin/%{cfg.architecture}-%{cfg.buildcfg}/"
     objdir "%{wks.location}/build/obj/%{cfg.architecture}-%{cfg.buildcfg}/"
 	
 	links { "glfw" }
-	includedirs { "../libraries/GLFW/include" }
+	includedirs { "../vendors/GLFW/include" }
 	
 	files 
 	{
 	-- header files
-        "%{prj.location}/**.h", "%{prj.location}/**.hpp", "%{prj.location}/**.hh", "%{prj.location}/**.hxx",
+        "%{wks.location}/nx_engine/**.h", 
+		"%{wks.location}/nx_engine/**.hpp", 
+		"%{wks.location}/nx_engine/**.hh", 
+		"%{wks.location}/nx_engine/**.hxx",
 	-- source files
-        "%{prj.location}/**.c", "%{prj.location}/**.cpp", "%{prj.location}/**.cc", "%{prj.location}/**.cxx",
+        "%{wks.location}/nx_engine/**.c", 
+		"%{wks.location}/nx_engine/**.cpp", 
+		"%{wks.location}/nx_engine/**.cc", 
+		"%{wks.location}/nx_engine/**.cxx",
 	-- text files
-        "%{prj.location}/**.lua", "%{prj.location}/**.md",
+        "%{wks.location}/nx_engine/**.lua", 
+		"%{wks.location}/nx_engine/**.md",
     }
 	
 	
@@ -37,7 +43,7 @@ project "nx_engine"
 	filter { "system:windows"}	
 		runtime "Debug"
 		symbols "on"
-		sanitize { "Address" }
+		-- sanitize { "Address" }
 		flags { "NoRuntimeChecks", "NoIncrementalLink" }
 		
 	
