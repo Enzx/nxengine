@@ -14,7 +14,7 @@ namespace service
      * \note This class is not thread safe
      * \example
      *          service::locator service;
-     *          service.add<test_service>(test_service(5));
+     *          service.add<test_service>();
      *          service.get<test_service>()->test();
      *          service.remove<test_service>();
      */
@@ -33,7 +33,7 @@ namespace service
             static_assert(std::is_base_of_v<interface_service, TypeName>,
                           "ServiceType must be a derived class of interface_service");
             
-            auto service = std::make_shared<TypeName>(std::forward<Args>(instance)...);
+            const auto service = std::make_shared<TypeName>(std::forward<Args>(instance)...);
             const auto type = std::type_index(typeid(TypeName));
             services_[type] = std::move(service);
         }
