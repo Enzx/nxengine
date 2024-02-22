@@ -37,9 +37,9 @@ int main()
 
     service.add<glfw_window_system>();
 
-    service.get<glfw_window_system>()->initialize();
+    service.get<window_system::window_system>()->initialize();
     std::string title = "Hello World";
-    service.get<glfw_window_system>()->create_window(640, 480, title);
+    service.get<window_system::window_system>()->create_window(640, 480, title);
 
     
 
@@ -63,8 +63,8 @@ int main()
     glfwTerminate();*/
 
     while (true) {
-        service.get<glfw_window_system>()->update();
+        service.get<window_system::window_system>()->update();
     }
-    service.get<glfw_window_system>()->terminate();
+    service.get<window_system::window_system>()->terminate();
     return 0;
 }
