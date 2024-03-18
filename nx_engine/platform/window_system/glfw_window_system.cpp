@@ -28,7 +28,7 @@ void glfw_window_system::update()
 	}
 }
 
-std::shared_ptr<interface_window> glfw_window_system::create_window(int width, int height, std::string& title)
+std::shared_ptr<interface_window> glfw_window_system::create_window(int width, int height, std::string&& title)
 {
 	std::shared_ptr<interface_window> windowPointer = std::make_shared<glfw_window>(width, height, title);
 	windows_.push_back(windowPointer);

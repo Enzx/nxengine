@@ -13,7 +13,7 @@ public:
 	void initialize() override;
 	void terminate() override;
 	void update() override;
-	std::shared_ptr<interface_window> create_window(int width, int height, std::string& title) override;
+	std::shared_ptr<interface_window> create_window(int width, int height, std::string&& title) override;
 	void destroy_window(std::shared_ptr<interface_window>) override;
 
 private:
