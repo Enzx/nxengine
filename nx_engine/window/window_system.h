@@ -1,15 +1,14 @@
 ﻿#pragma once
 #include <memory>
 #include <string>
-#include "..\data_types\service_locator\interface_service.h"
+#include "../data_types/service_locator/interface_service.h"
 
 class interface_window;
-namespace window_system
+namespace window
 {
     class window_system : public service::interface_service
     {
     public:
-        virtual ~window_system() = default;
         virtual void initialize() = 0;
         virtual void terminate() = 0;
         virtual void update() = 0;
