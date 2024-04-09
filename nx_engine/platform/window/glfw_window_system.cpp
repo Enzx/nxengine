@@ -3,54 +3,54 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 
-#include "window_events.h"
+#include "../../window/window_events.h"
 
 void window::glfw_window_system::initialize()
 {
-	if (glfwInit() == false)
-	{
-		//Error
-		std::cout << "Failed to initialize the glfw system";
-		return;
-	}
+    if (glfwInit() == false)
+    {
+        std::cout << "Failed to initialize the glfw system";
+    }
 }
 
 void window::glfw_window_system::terminate()
 {
-	glfwTerminate();
+    for (const auto& window : windows_)
+    {
+        destroy_window(window);
+    }
+    glfwTerminate();
 }
 
 void window::glfw_window_system::update()
 {
-	glfwPollEvents();
+    glfwPollEvents();
 
-	for (const auto& win : windows_)
-	{
-		win->update();
-	}
+    for (const auto& win : windows_)
+    {
+        win->update();
+    }
 }
 
-void window::glfw_window_system::on_window_close(const events::window_close& event)
+void window::glfw_window_system::on_window_close(const events::window_close& event) const
 {
-	events->publish(event);
+    events->publish(event);
 }
 
 std::shared_ptr<interface_window> window::glfw_window_system::create_window(int width, int height, std::string&& title)
 {
-	std::shared_ptr<interface_window> window = std::make_shared<glfw_window>(width, height, title);
-	window->events->subscribe<events::window_close>(&glfw_window_system::on_window_close, this);
-	
-	
-	windows_.push_back(window);
-	return window;
+    std::shared_ptr<interface_window> window = std::make_shared<glfw_window>(width, height, title);
+    window->events->subscribe<events::window_close>(&glfw_window_system::on_window_close, this);
+
+
+    windows_.push_back(window);
+    return window;
 }
 
 void window::glfw_window_system::destroy_window(const std::shared_ptr<interface_window> window)
 {
-	const auto win = static_cast<GLFWwindow*>(window->get_raw_pointer());
-	const auto it = std::ranges::find(windows_, window);
-	windows_.erase(it);
-	glfwDestroyWindow(win);
+    const auto win = static_cast<GLFWwindow*>(window->get_raw_pointer());
+    const auto it = std::ranges::find(windows_, window);
+    windows_.erase(it);
+    glfwDestroyWindow(win);
 }
-
-

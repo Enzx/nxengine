@@ -60,13 +60,6 @@ namespace event
 
         void handle(const void* msg) override
         {
-            //call static function
-            if (m_instance_ == nullptr)
-            {
-                m_function_(static_cast<const TMessage*>(msg));
-                return;
-            }
-            
             (m_instance_->*m_function_)(*static_cast<const TMessage*>(msg));
         }
 
@@ -80,6 +73,34 @@ namespace event
         {
             m_function_ = nullptr;
             m_instance_ = nullptr;
+        }
+    };
+
+    template <typename TMessage>
+    class static_function_wrapper final : public handler_base
+    {
+        typedef void (*callback_func)(const TMessage&);
+
+        callback_func m_function_;
+
+    public:
+        explicit static_function_wrapper(const callback_func func) : handler_base(), m_function_(func)
+        {
+        }
+
+        static_function_wrapper(const static_function_wrapper& other) = delete;
+        static_function_wrapper(static_function_wrapper&& other) noexcept = delete;
+        static_function_wrapper& operator=(const static_function_wrapper& other) = delete;
+        static_function_wrapper& operator=(static_function_wrapper&& other) noexcept = delete;
+        
+        void handle(const void* msg) override
+        {
+            m_function_(*static_cast<const TMessage*>(msg));
+        }
+        
+        ~static_function_wrapper() override
+        {
+            m_function_ = nullptr;
         }
     };
 }

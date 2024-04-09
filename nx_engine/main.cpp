@@ -4,17 +4,22 @@
 
 #include "data_types/service_locator/locator.h"
 #include "event/event_system.h"
-#include "window/window_system.h"
 #include "platform/window/glfw_window_system.h"
+#include "window/window_system.h"
+#include "window/interface_window.h"
+#include "window/window_events.h"
 
-class player
+
+std::shared_ptr<interface_window> main_window;
+bool running = true;
+
+void on_window_close(const window::events::window_close& event)
 {
-public:
-    static void on_endgame(const int& score)
-    {
-        std::cout << "Game over with score: " << score << "\n";
-    }
-};
+    if (event.window_id != main_window->get_id())
+        return;
+    std::cout << "Window closed\n";
+    running = false;
+}
 
 
 int main()
@@ -23,36 +28,14 @@ int main()
     services.add<window::glfw_window_system>();
     const auto window_system = services.get<window::window_system>();
     window_system->initialize();
-    window_system->create_window(640, 480, "Hello World");
-
+    main_window = window_system->create_window(640, 480, "Hello World");
+    main_window->events->subscribe<window::events::window_close>(&on_window_close);
     event::event_system events;
-    player p {};
-    events.subscribe<int, ::player>(&player::on_endgame);
-    events.publish(10);
 
-
-    /*  if (glfwInit() == false) {
-        std::cout << "glfwInit() failed" << std::endl;
-        return -1;
-    }
-
-    GLFWwindow* window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (window == NULL) {
-        std::cout << "glfwCreateWindow() failed" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    while (!glfwWindowShouldClose(window)) {
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-    glfwTerminate();*/
-
-    while (true)
+    while (running)
     {
         window_system->update();
     }
-    services.get<window::window_system>()->terminate();
+    window_system->terminate();
     return 0;
 }

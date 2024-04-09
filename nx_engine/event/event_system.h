@@ -4,7 +4,6 @@
 #include <typeindex>
 #include <vector>
 #include <any>
-#include <vcruntime.h>
 
 #include "handler.h"
 
@@ -12,13 +11,21 @@ namespace event
 {
     class handler_base;
 
-    class event_system final 
+    class event_system final
     {
     public:
         template <typename TMessage, typename TAgent>
         void subscribe(void (TAgent::*function)(const TMessage&), TAgent* instance)
         {
-            auto wrapper = new class member_function_wrapper<TAgent, TMessage>(function, instance);
+            const auto wrapper = new class member_function_wrapper<TAgent, TMessage>(function, instance);
+            handlers_[std::type_index(typeid(TMessage))].push_back(std::unique_ptr<handler_base>(wrapper));
+        }
+
+        //subscribe static functions
+        template <typename TMessage>
+        void subscribe(void (*function)(const TMessage&))
+        {
+            auto wrapper = new class static_function_wrapper<TMessage>(function);
             handlers_[std::type_index(typeid(TMessage))].push_back(std::unique_ptr<handler_base>(wrapper));
         }
 
@@ -26,7 +33,7 @@ namespace event
         template <typename TMessage, typename TAgent>
         void subscribe(void (TAgent::*function)(const TMessage&) const, TAgent* instance)
         {
-            auto wrapper = new class member_function_wrapper<TAgent, TMessage>(function, instance);
+            const auto wrapper = new class member_function_wrapper<TAgent, TMessage>(function, instance);
             handlers_[std::type_index(typeid(TMessage))].push_back(std::unique_ptr<handler_base>(wrapper));
         }
 
@@ -38,7 +45,7 @@ namespace event
         }
 
         template <typename TMessage, typename TAgent>
-        void unsubscribe(void (TAgent::*function)(const TMessage&), const TAgent& instance)
+        void unsubscribe(void (TAgent::*function)(const TMessage&), const TAgent* instance)
         {
             auto& handlers = handlers_[std::type_index(typeid(TMessage))];
             const auto it = std::find_if(

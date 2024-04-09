@@ -16,8 +16,13 @@ public:
     interface_window(const int width, const int height, std::string& title) : width_(width), height_(height), title_(std::move(title))
     {
         events = std::make_unique<event::event_system>();
+        window_id_ = last_window_id_++;
     }
 
+    int get_id() const
+    {
+        return window_id_;
+    }
     virtual ~interface_window() = default;
     virtual void show() = 0;
     virtual void hide() = 0;
@@ -29,4 +34,8 @@ protected:
     int width_ = 0;
     int height_ = 0;
     std::string title_;
+    int window_id_ = 0;
+
+private:
+    inline static int last_window_id_ = 0;
 };
