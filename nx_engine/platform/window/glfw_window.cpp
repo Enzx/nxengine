@@ -19,7 +19,6 @@ window::glfw_window::glfw_window(const int width, const int height, std::string&
 
 window::glfw_window::~glfw_window()
 {
-    glfwDestroyWindow(window_);
     window_ = nullptr;
 }
 

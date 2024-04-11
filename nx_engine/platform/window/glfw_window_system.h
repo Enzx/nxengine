@@ -9,9 +9,7 @@ namespace window
     class glfw_window_system : public window_system
     {
     public:
-        //constructor
         glfw_window_system() = default;
-        //destructor
         ~glfw_window_system() override = default;
 
         glfw_window_system(const glfw_window_system& other) = delete;
@@ -26,7 +24,10 @@ namespace window
         std::shared_ptr<interface_window> create_window(int width, int height, std::string&& title) override;
         void destroy_window(std::shared_ptr<interface_window>) override;
 
+
     private:
         std::vector<std::shared_ptr<interface_window>> windows_;
+        static void on_glfw_error(int error, const char* description);
+
     };
 }

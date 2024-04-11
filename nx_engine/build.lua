@@ -7,8 +7,20 @@ project "nx_engine"
 	targetdir "%{wks.location}/build/bin/%{cfg.architecture}-%{cfg.buildcfg}/"
     objdir "%{wks.location}/build/obj/%{cfg.architecture}-%{cfg.buildcfg}/"
 	
-	links { "glfw" }
-	includedirs { "../vendors/GLFW/include" }
+	links 
+	{ 
+		"glfw", 
+		"imgui",
+		"glad",
+		"opengl32.lib"
+	}
+
+	includedirs 
+	{ 
+		"../vendors/GLFW/include/",
+		"../vendors/imgui/",
+		"../vendors/glad/include/"		
+	}
 	
 	files 
 	{

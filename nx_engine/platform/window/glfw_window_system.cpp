@@ -11,6 +11,18 @@ void window::glfw_window_system::initialize()
     {
         std::cout << "Failed to initialize the glfw system";
     }
+    glfwWindowHint(GLFW_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_VERSION_MINOR, 4);
+
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwSetErrorCallback(&glfw_window_system::on_glfw_error);
+}
+
+void window::glfw_window_system::on_glfw_error(int error, const char* description)
+{
+    std::cout << "Error: " << error << " " << description << '\n';
 }
 
 void window::glfw_window_system::terminate()
@@ -24,12 +36,11 @@ void window::glfw_window_system::terminate()
 
 void window::glfw_window_system::update()
 {
-    glfwPollEvents();
-
     for (const auto& win : windows_)
     {
         win->update();
     }
+    glfwPollEvents();
 }
 
 void window::glfw_window_system::on_window_close(const events::window_close& event) const

@@ -61,7 +61,7 @@ namespace service
                 }
             }
 
-            assert(it != services_.end(), "Service not registered");
+            assert(it != services_.end());
             return std::static_pointer_cast<type_name>(services_[typeid(type_name)]);
         }
 
@@ -74,7 +74,7 @@ namespace service
         {
             const auto type = std::type_index(typeid(type_name));
             const auto it = services_.find(type);
-            assert(it != services_.end(), "Service not registered");
+            assert(it != services_.end());
 
             services_.erase(it);
         }

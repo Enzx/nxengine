@@ -3,6 +3,7 @@
 #include <string>
 
 #include "../event/event_system.h"
+#include "GLFW/glfw3.h"
 
 class interface_window
 {

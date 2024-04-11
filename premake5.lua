@@ -21,4 +21,6 @@ workspace "NxEngine"
 -- Projects
 
 include "vendors/GLFW/build.lua"
+include "vendors/imgui/build.lua"
+include "vendors/glad/build.lua"
 include "nx_engine/build.lua"
