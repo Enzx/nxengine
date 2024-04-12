@@ -1,37 +1,33 @@
 ﻿#pragma once
 
-namespace window
+namespace window::event
 {
-    namespace events
+    struct resize
     {
-        struct window_resize
-        {
-            int window_id;
-            int width;
-            int height;
-        };
-        struct window_move
-        {
-            int window_id;
-            int x;
-            int y;
-        };
-        struct window_focus
-        {
-            int window_id;
+        int window_id;
+        int width;
+        int height;
+    };
+    struct move
+    {
+        int window_id;
+        int x;
+        int y;
+    };
+    struct focus
+    {
+        int window_id;
 
-        };
-        struct window_lost_focus
-        {
-            int window_id;
+    };
+    struct focus_lost
+    {
+        int window_id;
 
-        };
-        struct window_close
-        {
-            explicit window_close(const int id) {  window_id = id;}
-            int window_id;
-        };
-    }
-  
+    };
+    struct close
+    {
+        explicit close(const int id) {  window_id = id;}
+        int window_id;
+    };
 }
 

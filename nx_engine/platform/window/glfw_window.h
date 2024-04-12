@@ -19,6 +19,7 @@ namespace window
 		void hide() override;
 		void update() override;
 		void* get_raw_pointer() override;
+		void close() override;
 
 	private:
 		GLFWwindow* window_ = nullptr;

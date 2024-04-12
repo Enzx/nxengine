@@ -22,7 +22,7 @@ namespace service
 
         std::unique_ptr<event::event_system> events = nullptr;
 
-    private:
+    protected:
         friend class locator;
 
         virtual void on_create(const locator* locator)

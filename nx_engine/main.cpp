@@ -7,15 +7,15 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "platform/window/glfw_window_system.h"
-#include "window/window_system.h"
 #include "window/interface_window.h"
 #include "window/window_events.h"
+#include "platform/input/glfw_input.h"
 
 
 std::shared_ptr<interface_window> main_window;
 bool running = true;
 
-void on_window_close(const window::events::window_close& event)
+void on_window_close(const window::event::close& event)
 {
     if (event.window_id != main_window->get_id())
         return;
@@ -24,10 +24,10 @@ void on_window_close(const window::events::window_close& event)
 }
 
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow* window, const int width, const int height)
 {
     glViewport(0, 0, width, height);
-} 
+}
 
 
 int main()
@@ -35,21 +35,32 @@ int main()
     std::cout << "[[Started]]\n";
 
     service::locator services;
-    services.add<window::glfw_window_system>();
-    const auto window_system = services.get<window::window_system>();
-    window_system->initialize();
+    const auto window_system = services.add<window::glfw_window_system>();
     main_window = window_system->create_window(640, 480, "Hello World");
-    main_window->events->subscribe<window::events::window_close>(&on_window_close);
-    event::event_system events;
-    // std::cout << "IMGUI Version: " << ImGui::GetVersion();
+    window_system->set_current_window(main_window);
+    main_window->events->subscribe<window::event::close>(&on_window_close);
+    
+    const auto input_system = services.add<input::glfw_input>();
+    
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     glViewport(0, 0, 640, 480);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glfwSetFramebufferSizeCallback((GLFWwindow*)main_window->get_raw_pointer(), framebuffer_size_callback);  
+    glfwSetFramebufferSizeCallback(static_cast<GLFWwindow*>(main_window->get_raw_pointer()), framebuffer_size_callback);
 
+    const auto action = std::make_shared<input::input_action>(
+        input::device_type::keyboard,
+        input::key_code::escape,
+        "Close_Window");
+    input_system->add_input_action(action);
     while (running)
     {
         window_system->update();
+        input_system->update();
+        if (action->get_state() == input::key_state::press)
+            main_window->close();
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
     window_system->terminate();
     std::cout << "[[Finished]]\n";

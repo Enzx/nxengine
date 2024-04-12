@@ -17,12 +17,13 @@ namespace window
         glfw_window_system& operator=(const glfw_window_system& other) = delete;
         glfw_window_system& operator=(glfw_window_system&& other) noexcept = delete;
 
-        void initialize() override;
+        void on_create(const service::locator* locator) override;
         void terminate() override;
         void update() override;
-        void on_window_close(const events::window_close& event) const;
+        void on_window_close(const event::close& event) const;
         std::shared_ptr<interface_window> create_window(int width, int height, std::string&& title) override;
         void destroy_window(std::shared_ptr<interface_window>) override;
+        void set_current_window(const std::shared_ptr<interface_window>& window) override;
 
 
     private:

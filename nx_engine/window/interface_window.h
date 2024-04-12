@@ -14,7 +14,8 @@ public:
     interface_window& operator=(const interface_window& other) = delete;
     interface_window& operator=(interface_window&& other) noexcept = delete;
 
-    interface_window(const int width, const int height, std::string& title) : width_(width), height_(height), title_(std::move(title))
+    interface_window(const int width, const int height, std::string& title) : width_(width), height_(height),
+                                                                              title_(std::move(title))
     {
         events = std::make_unique<event::event_system>();
         window_id_ = last_window_id_++;
@@ -24,9 +25,12 @@ public:
     {
         return window_id_;
     }
+
     virtual ~interface_window() = default;
     virtual void show() = 0;
     virtual void hide() = 0;
+    virtual void close() = 0;
+
     virtual void update() = 0;
     virtual void* get_raw_pointer() = 0;
     std::unique_ptr<event::event_system> events = nullptr;

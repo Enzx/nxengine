@@ -43,6 +43,10 @@ namespace event
         {
             handlers_[std::type_index(typeid(TMessage))].clear();
         }
+        void unsubscribe_all()
+        {
+            handlers_.clear();
+        }
 
         template <typename TMessage, typename TAgent>
         void unsubscribe(void (TAgent::*function)(const TMessage&), const TAgent* instance)
