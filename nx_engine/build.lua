@@ -12,6 +12,7 @@ project "nx_engine"
 		"opengl32.lib",
 		"glfw", 
 		"imgui",
+		"imgui_backends",
 		"glad",
 	}
 

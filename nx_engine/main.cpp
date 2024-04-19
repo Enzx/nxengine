@@ -134,11 +134,7 @@ int main()
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // or GL_LINE to see wireframes or GL_POINT for points
     glPointSize(5.0f);
-
     
-    
-     
-
     while (running)
     {
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
@@ -158,14 +154,12 @@ int main()
         
         input_system->update();
 
-        window_system->update();
 
         if (action->get_state() == input::key_state::press)
             main_window->close();
 
     
 
-        continue;
         
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -216,6 +210,9 @@ int main()
 
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        
+        window_system->update();
+
     }
     window_system->terminate();
     std::cout << "[[Finished]]\n";
