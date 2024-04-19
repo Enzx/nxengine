@@ -9,10 +9,10 @@ project "nx_engine"
 	
 	links 
 	{ 
+		"opengl32.lib",
 		"glfw", 
 		"imgui",
 		"glad",
-		"opengl32.lib"
 	}
 
 	includedirs 
@@ -37,6 +37,9 @@ project "nx_engine"
 	-- text files
         "%{wks.location}/nx_engine/**.lua", 
 		"%{wks.location}/nx_engine/**.md",
+	-- assets
+		"%{wks.location}/assets/**.frag",
+		"%{wks.location}/assets/**.vert",
     }
 	
 	
