@@ -10,6 +10,7 @@ workspace "NxEngine"
 
 	architecture "x86_64"
     location "./"
+	startproject "nx_engine"
 
 	configurations { "Debug", "Release" }
 	

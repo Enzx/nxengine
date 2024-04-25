@@ -1,8 +1,11 @@
 ﻿#include "shader.h"
-
+#include <glad/glad.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 shader::shader(const char* vertex_shader_path, const char* fragment_shader_path)
 {
@@ -39,7 +42,7 @@ shader::shader(const char* vertex_shader_path, const char* fragment_shader_path)
     unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertex_shader_code_c, nullptr);
     glCompileShader(vertex_shader);
-
+    check_compile_status(vertex_shader, "VERTEX");
     int success;
     char info_log[512];
     glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
@@ -52,6 +55,7 @@ shader::shader(const char* vertex_shader_path, const char* fragment_shader_path)
     unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment_shader, 1, &fragment_shader_code_c, nullptr);
     glCompileShader(fragment_shader);
+    check_compile_status(fragment_shader, "FRAGMENT");
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
@@ -97,5 +101,36 @@ void shader::set_float4(const char* name, float v0, float v1, float v2, float v3
 {
     glUniform4f(glGetUniformLocation(id, name), v0, v1, v2, v3);
 }
+
+void shader::set_mat4(const char* name, glm::mat4 mat) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(id, name), 1, GL_FALSE, &mat[0][0]);
+}
+
+void shader::check_compile_status(const unsigned int shader, const char* type)
+{
+    int success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        char info_log[512];
+        glGetShaderInfoLog(shader, 512, nullptr, info_log);
+        std::cout << "ERROR::SHADER::" << type << "::COMPILATION_FAILED\n" << info_log << '\n';
+    }
+}
+
+void shader::check_link_status(const unsigned int program) const
+{
+    int success;
+    glGetProgramiv(id, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        char info_log[512];
+        glGetProgramInfoLog(program, 512, nullptr, info_log);
+        std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << info_log << '\n';
+    }
+}
+
+
 
 

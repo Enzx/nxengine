@@ -20,7 +20,8 @@ project "nx_engine"
 	{ 
 		"../vendors/GLFW/include/",
 		"../vendors/imgui/",
-		"../vendors/glad/include/"		
+		"../vendors/glad/include/",
+		"../vendors/include/"
 	}
 	
 	files 
