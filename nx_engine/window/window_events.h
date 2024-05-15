@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace window::event
+namespace window::events
 {
     struct resize
     {

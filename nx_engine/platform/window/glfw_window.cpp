@@ -36,7 +36,7 @@ void window::glfw_window::update()
     glfwSwapBuffers(window_);
     if (glfwWindowShouldClose(window_))
     {
-        events->publish(event::close{window_id_});
+        events->publish(events::close{window_id_});
     }
 }
 

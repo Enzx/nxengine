@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "../../window/window_events.h"
-
+#include "../../event/event_system.h"
 
 void window::glfw_window_system::on_glfw_error(int error, const char* description)
 {
@@ -13,6 +13,7 @@ void window::glfw_window_system::on_glfw_error(int error, const char* descriptio
 
 void window::glfw_window_system::on_create(const service::locator* locator)
 {
+    events = std::make_shared<::event::event_system>();
     if (glfwInit() == false)
     {
         std::cout << "Failed to initialize the glfw system";
@@ -41,7 +42,7 @@ void window::glfw_window_system::update()
     glfwPollEvents();
 }
 
-void window::glfw_window_system::on_window_close(const event::close& event) const
+void window::glfw_window_system::on_window_close(const events::close& event) const
 {
     events->publish(event);
 }
@@ -49,7 +50,7 @@ void window::glfw_window_system::on_window_close(const event::close& event) cons
 std::shared_ptr<interface_window> window::glfw_window_system::create_window(int width, int height, std::string&& title)
 {
     std::shared_ptr<interface_window> window = std::make_shared<glfw_window>(width, height, title);
-    window->events->subscribe<event::close>(&glfw_window_system::on_window_close, this);
+    window->events->subscribe<events::close>(&glfw_window_system::on_window_close, this);
 
 
     windows_.push_back(window);

@@ -4,10 +4,16 @@
 #include <typeindex>
 #include <unordered_map>
 
+#include "detail/has_on_create.h"
+
 namespace service
 {
-    class interface_service;
 
+    class locator
+    {
+    public:
+        virtual ~locator() = default;
+    };
     /**
      * \brief Service locator class to register and retrieve services by type name
      * \details This class is a singleton and is used to register and retrieve services by type name
@@ -18,7 +24,8 @@ namespace service
      *          service.get<test_service>()->test();
      *          service.remove<test_service>();
      */
-    class locator
+    template <typename thread_policy>
+    class policy_locator : public locator, private thread_policy
     {
     public:
         /**
@@ -30,13 +37,15 @@ namespace service
         template <typename type_name, typename... Args>
         std::shared_ptr<type_name> add(Args&&... instance)
         {
-            static_assert(std::is_base_of_v<interface_service, type_name>,
-                          "ServiceType must be a derived class of interface_service");
-
             const auto service = std::make_shared<type_name>(std::forward<Args>(instance)...);
-            service->on_create(this);
+            if constexpr (detail::has_on_create<type_name, void(locator*)>::value)
+            {
+                service->on_create(this);
+            }
             const auto type = std::type_index(typeid(type_name));
+            this->lock();
             services_[type] = std::move(service);
+            this->unlock();
             return std::static_pointer_cast<type_name>(services_[type]);
         }
 
@@ -48,21 +57,19 @@ namespace service
         template <typename type_name>
         std::shared_ptr<type_name> get()
         {
-            static_assert(std::is_base_of_v<interface_service, type_name>,
-                          "ServiceType must be a derived class of interface_service");
             const auto type = std::type_index(typeid(type_name));
-            const auto it = services_.find(type);
+            this->lock();
             for (const auto& [key, value] : services_)
             {
                 if (type == key ||
                     dynamic_cast<type_name*>(value.get()) != nullptr)
                 {
+                    this->unlock();
                     return std::static_pointer_cast<type_name>(value);
                 }
             }
-
-            assert(it != services_.end());
-            return std::static_pointer_cast<type_name>(services_[typeid(type_name)]);
+            assert(false && "Service not found");
+            return nullptr;
         }
 
         /**
@@ -73,10 +80,9 @@ namespace service
         void remove()
         {
             const auto type = std::type_index(typeid(type_name));
-            const auto it = services_.find(type);
-            assert(it != services_.end());
-
-            services_.erase(it);
+            this->lock();
+            services_.erase(type);
+            this->unlock();
         }
 
         /**
@@ -84,10 +90,12 @@ namespace service
          */
         void clear()
         {
+            this->lock();
             services_.clear();
+            this->unlock();
         }
 
     private:
-        std::unordered_map<std::type_index, std::shared_ptr<interface_service>> services_;
+        std::unordered_map<std::type_index, std::shared_ptr<void>> services_;
     };
 }
