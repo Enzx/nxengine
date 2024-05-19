@@ -3,4 +3,4 @@
 	url = https://github.com/Enzx/imgui.git
 [submodule "vendors/assimp"]
 	path = vendors/assimp
-	url = https://github.com/assimp/assimp.git
+	url = https://github.com/Enzx/assimp.git
