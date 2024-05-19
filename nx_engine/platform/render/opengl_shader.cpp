@@ -1,4 +1,4 @@
-﻿#include "shader.h"
+﻿#include "opengl_shader.h"
 #include <glad/glad.h>
 #include <fstream>
 #include <iostream>
@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-shader::shader(const char* vertex_shader_path, const char* fragment_shader_path)
+opengl_shader::opengl_shader(const wchar_t* vertex_shader_path, const wchar_t* fragment_shader_path)
 {
     std::string vertex_shader_code;
     std::string fragment_shader_code;
@@ -43,25 +43,12 @@ shader::shader(const char* vertex_shader_path, const char* fragment_shader_path)
     glShaderSource(vertex_shader, 1, &vertex_shader_code_c, nullptr);
     glCompileShader(vertex_shader);
     check_compile_status(vertex_shader, "VERTEX");
-    int success;
-    char info_log[512];
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertex_shader, 512, nullptr, info_log);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << info_log << '\n';
-    }
 
     unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment_shader, 1, &fragment_shader_code_c, nullptr);
     glCompileShader(fragment_shader);
     check_compile_status(fragment_shader, "FRAGMENT");
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragment_shader, 512, nullptr, info_log);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << info_log << '\n';
-    }
+
 
     id = glCreateProgram();
     glAttachShader(id, vertex_shader);
@@ -72,42 +59,42 @@ shader::shader(const char* vertex_shader_path, const char* fragment_shader_path)
     glDeleteShader(fragment_shader);
 }
 
-void shader::use() const
+void opengl_shader::use() const
 {
     glUseProgram(id);
 }
 
-void shader::set_bool(const char* name, const bool value) const
+void opengl_shader::set_bool(const char* name, const bool value) const
 {
     glUniform1i(glGetUniformLocation(id, name), static_cast<int>(value));
 }
 
-void shader::set_int(const char* name, const int value) const
+void opengl_shader::set_int(const char* name, const int value) const
 {
     glUniform1i(glGetUniformLocation(id, name), value);
 }
 
-void shader::set_float(const char* name, const float value) const
+void opengl_shader::set_float(const char* name, const float value) const
 {
     glUniform1f(glGetUniformLocation(id, name), value);
 }
 
-void shader::set_float3(const char* name, float v0, float v1, float v2) const
+void opengl_shader::set_float3(const char* name, float v0, float v1, float v2) const
 {
     glUniform3f(glGetUniformLocation(id, name), v0, v1, v2);
 }
 
-void shader::set_float4(const char* name, float v0, float v1, float v2, float v3) const
+void opengl_shader::set_float4(const char* name, float v0, float v1, float v2, float v3) const
 {
     glUniform4f(glGetUniformLocation(id, name), v0, v1, v2, v3);
 }
 
-void shader::set_mat4(const char* name, glm::mat4 mat) const
+void opengl_shader::set_mat4(const char* name, glm::mat4 mat) const
 {
     glUniformMatrix4fv(glGetUniformLocation(id, name), 1, GL_FALSE, &mat[0][0]);
 }
 
-void shader::check_compile_status(const unsigned int shader, const char* type)
+void opengl_shader::check_compile_status(const unsigned int shader, const char* type)
 {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -119,7 +106,7 @@ void shader::check_compile_status(const unsigned int shader, const char* type)
     }
 }
 
-void shader::check_link_status(const unsigned int program) const
+void opengl_shader::check_link_status(const unsigned int program) const
 {
     int success;
     glGetProgramiv(id, GL_LINK_STATUS, &success);

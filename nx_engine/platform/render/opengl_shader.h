@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include <glm/fwd.hpp>
 
-class shader
+class opengl_shader
 {
 public:
     unsigned int id;
-    shader(const char* vertex_shader_path, const char* fragment_shader_path);
+    opengl_shader(const wchar_t* vertex_shader_path, const wchar_t* fragment_shader_path);
+    opengl_shader() = default;
     void use() const;
     void set_bool(const char* name, bool value) const;
     void set_int(const char* name, int value) const;

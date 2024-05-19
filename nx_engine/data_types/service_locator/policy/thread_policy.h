@@ -3,8 +3,9 @@
 
 namespace service::policy
 {
-    struct thread_safe
+    class thread_safe
     {
+    public:
         void lock()
         {
             mutex_.lock();
@@ -19,9 +20,10 @@ namespace service::policy
         std::mutex mutex_;
     };
 
-    struct not_thread_safe
+    class not_thread_safe
     {
-        void lock() {}
-        void unlock() {}
+    public:
+        static void lock() {}
+        static void unlock() {}
     };
 }

@@ -7,6 +7,7 @@ project "nx_engine"
 	targetdir "%{wks.location}/build/bin/%{cfg.architecture}-%{cfg.buildcfg}/"
     objdir "%{wks.location}/build/obj/%{cfg.architecture}-%{cfg.buildcfg}/"
 	
+
 	links 
 	{ 
 		"opengl32.lib",
@@ -14,6 +15,7 @@ project "nx_engine"
 		"imgui",
 		"imgui_backends",
 		"glad",
+		"assimp",
 	}
 
 	includedirs 
@@ -21,8 +23,11 @@ project "nx_engine"
 		"../vendors/GLFW/include/",
 		"../vendors/imgui/",
 		"../vendors/glad/include/",
+		"../vendors/assimp/include/",
 		"../vendors/include/"
 	}
+	
+	-- defines { "ASSIMP_STATIC" }
 	
 	files 
 	{

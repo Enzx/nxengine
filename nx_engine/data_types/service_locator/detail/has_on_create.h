@@ -3,28 +3,27 @@
 
 namespace service::detail
 {
-    template <typename, typename T>
+    template <typename, typename TFunc>
     struct has_on_create
     {
         static_assert(
-            std::integral_constant<T, false>::value,
+            std::integral_constant<TFunc, false>::value,
             "Second template parameter needs to be of function type.");
     };
 
-    template <typename C, typename Ret, typename... Args>
-    struct has_on_create<C, Ret(Args...)>
+    template <typename TClass, typename TFunc, typename... TArgs>
+    struct has_on_create<TClass, TFunc(TArgs...)>
     {
-    private:
-        template <typename T>
-        static constexpr auto check(T*) ->
+        template <typename TInstance>
+        static constexpr auto check(TInstance*) ->
             typename std::is_same<
-                decltype(std::declval<T>().on_create(std::declval<Args>()...)),
-                Ret>::type;
+                decltype(std::declval<TInstance>().on_create(std::declval<TArgs>()...)),
+                TFunc>::type;
 
         template <typename>
         static constexpr std::false_type check(...);
-
-        typedef decltype(check<C>(0)) type;
+    private:
+        typedef decltype(check<TClass>(nullptr)) type;
 
     public:
         static constexpr bool value = type::value;
