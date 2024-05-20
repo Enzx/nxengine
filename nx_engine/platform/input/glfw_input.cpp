@@ -20,7 +20,7 @@ platform::input::glfw_input::~glfw_input()
     window_ = nullptr;
 }
 
-void platform::input::glfw_input::on_create(const service::locator*)
+void platform::input::glfw_input::on_create(const service::locator<>*)
 {
     window_ = glfwGetCurrentContext();
     assert(window_ != nullptr);

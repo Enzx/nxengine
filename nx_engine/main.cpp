@@ -49,7 +49,7 @@ int main()
         return -1;
     }
 
-    service::policy_locator<service::policy::thread_safe> services;
+    service::locator<> services;
     const auto window_system = services.add<window::glfw_window_system>();
     main_window = window_system->create_window(640, 480, "Hello World");
     window_system->set_current_window(main_window);

@@ -21,8 +21,9 @@ namespace service::policy
     class thread_safe;
 }
 
-void opengl_render_system::on_create(const service::locator* locator)
+void opengl_render_system::on_create(service::locator<>* locator)
 {
+    LOG_DEBUGF("opengl_render_system::on_create");
     right_input_ = std::make_shared<
         input::input_action>(input::device_type::keyboard, input::key_code::d, "Move_Right");
     left_input_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::a, "Move_Left");
@@ -30,8 +31,7 @@ void opengl_render_system::on_create(const service::locator* locator)
                                                           "Rotate_Right");
     rotate_left_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::q,
                                                          "Rotate_Left");
-    const auto services = (service::policy_locator<service::policy::thread_safe>*) locator;
-    auto input_system = services->get<platform::input::glfw_input>();
+    const auto input_system = locator->get<platform::input::glfw_input>();
     input_system->add_input_action(right_input_);
     input_system->add_input_action(left_input_);
     input_system->add_input_action(rotate_right_);

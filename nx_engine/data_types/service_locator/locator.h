@@ -5,14 +5,11 @@
 #include <unordered_map>
 
 #include "detail/has_on_create.h"
+#include "policy/thread_policy.h"
 
 namespace service
 {
-    class locator
-    {
-    public:
-        virtual ~locator() = default;
-    };
+  
 
     /**
      * \brief Service locator class to register and retrieve services by type name
@@ -24,8 +21,8 @@ namespace service
      *          service.get<test_service>()->test();
      *          service.remove<test_service>();
      */
-    template <typename thread_policy>
-    class policy_locator : public locator, private thread_policy
+    template <typename thread_policy = policy::not_thread_safe>
+    class locator : thread_policy
     {
     public:
         /**
@@ -38,7 +35,7 @@ namespace service
         std::shared_ptr<type_name> add(Args&&... instance)
         {
             const auto service = std::make_shared<type_name>(std::forward<Args>(instance)...);
-            if constexpr (detail::has_on_create<type_name, void(locator*)>::value)
+            if constexpr (detail::has_on_create<type_name, void(locator<>*)>::value)
             {
                 service->on_create(this);
             }

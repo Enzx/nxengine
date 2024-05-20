@@ -38,7 +38,7 @@ public:
     ~opengl_render_system() override;
     void update() override;
 
-    void on_create(const service::locator* locator);
+    void on_create(service::locator<>* locator);
 
 private:
     opengl_shader our_shader_{};

@@ -1,9 +1,6 @@
 ﻿#pragma once
 
-namespace service
-{
-    class locator;
-}
+
 
 class render_system
 {

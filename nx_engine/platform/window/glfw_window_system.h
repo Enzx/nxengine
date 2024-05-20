@@ -18,7 +18,7 @@ namespace window
         glfw_window_system& operator=(const glfw_window_system& other) = delete;
         glfw_window_system& operator=(glfw_window_system&& other) noexcept = delete;
 
-        void on_create(const service::locator* locator);
+        void on_create(const service::locator<>* locator);
         void terminate() override;
         void update() override;
         void on_window_close(const events::close& event) const;
