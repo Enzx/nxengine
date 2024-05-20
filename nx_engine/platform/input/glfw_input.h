@@ -17,9 +17,9 @@ namespace platform::input
         void add_input_action(const std::shared_ptr<::input::input_action>& action) override;
         void remove_input_action(const std::shared_ptr<::input::input_action>& action) override;
         ~glfw_input() override;
+        void on_create(const service::locator* locator);
 
     private:
-        void on_create(const service::locator* locator);
 
         GLFWwindow* window_ = nullptr;
     };

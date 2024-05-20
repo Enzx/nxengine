@@ -8,12 +8,12 @@
 
 namespace service
 {
-
     class locator
     {
     public:
         virtual ~locator() = default;
     };
+
     /**
      * \brief Service locator class to register and retrieve services by type name
      * \details This class is a singleton and is used to register and retrieve services by type name
@@ -59,17 +59,9 @@ namespace service
         {
             const auto type = std::type_index(typeid(type_name));
             this->lock();
-            for (const auto& [key, value] : services_)
-            {
-                if (type == key ||
-                    dynamic_cast<type_name*>(value.get()) != nullptr)
-                {
-                    this->unlock();
-                    return std::static_pointer_cast<type_name>(value);
-                }
-            }
-            assert(false && "Service not found");
-            return nullptr;
+            const auto service = std::static_pointer_cast<type_name>(services_[type]);
+            this->unlock();
+            return service;
         }
 
         /**

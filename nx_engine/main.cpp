@@ -54,41 +54,28 @@ int main()
     main_window = window_system->create_window(640, 480, "Hello World");
     window_system->set_current_window(main_window);
     main_window->events->subscribe<window::events::close>(&on_window_close);
+    const auto input_system = services.add<platform::input::glfw_input>();
     const auto renderer = services.add<opengl_render_system>();
 
-    auto input_system = services.add<platform::input::glfw_input>();
 
 
     glfwSetFramebufferSizeCallback(static_cast<GLFWwindow*>(main_window->get_raw_pointer()), framebuffer_size_callback);
 
     auto close_input_action = std::make_shared<input::input_action>(input::device_type::keyboard,
                                                                     input::key_code::escape, "Close_Window");
-    auto right_input_action = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::d,
-                                                                    "Move_Right");
-    auto left_input_action = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::a,
-                                                                   "Move_Left");
-    auto rotate_right_input_action = std::make_shared<input::input_action>(
-        input::device_type::keyboard, input::key_code::e, "Rotate_Right");
-    auto rotate_left_input_action = std::make_shared<input::input_action>(
-        input::device_type::keyboard, input::key_code::q, "Rotate_Left");
+
 
     input_system->add_input_action(close_input_action);
-    input_system->add_input_action(right_input_action);
-    input_system->add_input_action(left_input_action);
-    input_system->add_input_action(rotate_right_input_action);
-    input_system->add_input_action(rotate_left_input_action);
 
     while (running)
     {
 
-      //  input_system->update();
+        input_system->update();
+        renderer->update();
+        window_system->update();
 
         if (close_input_action->get_state() == input::key_state::press)
             main_window->close();
-        window_system->update();
-        renderer->update();
-
-
     }
 
     window_system->terminate();

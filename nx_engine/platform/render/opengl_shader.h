@@ -7,6 +7,8 @@ public:
     unsigned int id;
     opengl_shader(const wchar_t* vertex_shader_path, const wchar_t* fragment_shader_path);
     opengl_shader() = default;
+    ~opengl_shader();
+    void compile(const wchar_t* vertex_shader_source, const wchar_t* fragment_shader_source);
     void use() const;
     void set_bool(const char* name, bool value) const;
     void set_int(const char* name, int value) const;

@@ -1,21 +1,35 @@
 ﻿#pragma once
+
 #include "opengl_shader.h"
 #include "opengl_texture.h"
 #include "../../render/render_system.h"
 #include <glm/vec3.hpp>
 
+#include "camera.h"
 #include "model.h"
 #include "opengl_mesh.h"
+#include "glad/glad.h"
+#include "../../input/input_action.h"
+#include "../../data_types/service_locator/locator.h"
 
-namespace service
+
+inline void APIENTRY opengl_message_callback(GLenum source,
+                                             GLenum type,
+                                             GLuint id,
+                                             GLenum severity,
+                                             GLsizei length,
+                                             const GLchar* message,
+                                             const void* userParam)
 {
-    class locator;
+    fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+            type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "",
+            type, severity, message);
 }
 
 class opengl_render_system final : public render_system
 {
 public:
-    opengl_render_system() = default;
+    opengl_render_system();
 
     opengl_render_system(const opengl_render_system& other) = delete;
     opengl_render_system(opengl_render_system&& other) noexcept = delete;
@@ -27,17 +41,13 @@ public:
     void on_create(const service::locator* locator);
 
 private:
-    opengl_texture texture1_{};
-    opengl_texture texture2_{};
     opengl_shader our_shader_{};
-    glm::vec3 camera_pos_{};
-    glm::vec3 camera_target_{};
-    glm::vec3 camera_direction_{};
-    glm::vec3 up_{};
-    glm::vec3 camera_right_{};
-    glm::vec3 camera_up_{};
-    glm::vec3 camera_front_{};
-    float camera_speed_ = 0.05f;
+
+    Camera camera_{glm::vec3(0.0f, 0.0f, 3.0f)};
+    std::shared_ptr<input::input_action> right_input_;
+    std::shared_ptr<input::input_action> left_input_;
+    std::shared_ptr<input::input_action> rotate_right_;
+    std::shared_ptr<input::input_action> rotate_left_;
 
     model* our_model;
 };

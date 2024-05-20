@@ -11,17 +11,43 @@
 #include "model.h"
 #include "opengl_shader.h"
 #include "../../log/logger.h"
+#include "../input/glfw_input.h"
 #include "GLFW/glfw3.h"
+#include "../../data_types/service_locator/policy/thread_policy.h"
 
+
+namespace service::policy
+{
+    class thread_safe;
+}
 
 void opengl_render_system::on_create(const service::locator* locator)
 {
-    LOG_INFO("opengl_render_system::on_create");
+    right_input_ = std::make_shared<
+        input::input_action>(input::device_type::keyboard, input::key_code::d, "Move_Right");
+    left_input_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::a, "Move_Left");
+    rotate_right_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::e,
+                                                          "Rotate_Right");
+    rotate_left_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::q,
+                                                         "Rotate_Left");
+    const auto services = (service::policy_locator<service::policy::thread_safe>*) locator;
+    auto input_system = services->get<platform::input::glfw_input>();
+    input_system->add_input_action(right_input_);
+    input_system->add_input_action(left_input_);
+    input_system->add_input_action(rotate_right_);
+    input_system->add_input_action(rotate_left_);
+    
+    LOG_TRACE("opengl_render_system::on_create");
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         LOG_ERROR("Failed to initialize GLAD");
         return;
     }
+    // During init, enable debug output
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(opengl_message_callback, nullptr);
+
     glEnable(GL_DEPTH_TEST);
 
     glViewport(0, 0, 640, 480);
@@ -36,60 +62,59 @@ void opengl_render_system::on_create(const service::locator* locator)
     const std::filesystem::path vertex_shader_path = assets_path_shaders / "default.vert";
     const std::filesystem::path fragment_shader_path = assets_path_shaders / "default.frag";
 
-    our_shader_ = opengl_shader(vertex_shader_path.c_str(), fragment_shader_path.c_str());
-     our_model = new model((assets_path / "models" / "nanosuit.obj").string().c_str());
-    
+    LOG_TRACE("Compile Shader Program");
+    our_shader_.compile(vertex_shader_path.c_str(), fragment_shader_path.c_str());
+    LOG_TRACE("Loading Model");
+    our_model = new model((assets_path / "models" / "backpack.obj").string().c_str());
+
     // camera
-    camera_pos_ = glm::vec3(0.0f, 0.0f, 5.0f);
-    camera_target_ = glm::vec3(0.0f, 0.0f, 0.0f);
-    camera_direction_ = glm::normalize(camera_pos_ - camera_target_);
-    up_ = glm::vec3(0.0f, 1.0f, 0.0f);
-    camera_right_ = glm::normalize(glm::cross(up_, camera_direction_));
-    camera_up_ = glm::cross(camera_direction_, camera_right_);
-    camera_front_ = glm::vec3(0.0f, 0.0f, -1.0f);
-    camera_speed_ = 0.05f;
+ 
 
     // draw wireframe
-    //  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 void opengl_render_system::update()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture1_.id);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture2_.id);
-    if (glGetError() == GL_INVALID_OPERATION)
-    {
-        std::cout << "GL_INVALID_OPERATION\n";
-    }
+
     our_shader_.use();
+    GL_CHECK_ERROR();
 
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 640.0f / 480.f, 0.1f, 100.0f);
-
-    camera_direction_ = glm::normalize(camera_pos_ - camera_target_);
-    camera_right_ = glm::normalize(glm::cross(up_, camera_direction_));
-    camera_up_ = glm::cross(camera_direction_, camera_right_);
-    camera_front_ = glm::vec3(0.0f, 0.0f, -1.0f);
-
-    // if (right_input_action->get_state() == input::key_state::press)
-    //   camera_pos_ -= glm::normalize(glm::cross(camera_front_, camera_up_)) * camera_speed_;
-    // if (left_input_action->get_state() == input::key_state::press)
-    //   camera_pos_ += glm::normalize(glm::cross(camera_front_, camera_up_)) * camera_speed_;
-
-    view = glm::lookAt(camera_pos_, camera_pos_ + camera_front_, camera_up_);
+    glm::mat4 projection = glm::perspective(glm::radians(camera_.Zoom), 640.0f / 480.f, 0.1f, 100.0f);
+    glm::mat4 view = camera_.GetViewMatrix();
 
     our_shader_.set_mat4("projection", projection);
     our_shader_.set_mat4("view", view);
+
+    // render the loaded model
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // it's a bit too big for our scene, so scale it down
+    our_shader_.set_mat4("model", model);
+    GL_CHECK_ERROR();
+
     our_model->draw(our_shader_);
-    if (glGetError() == GL_INVALID_OPERATION)
+    if(right_input_->get_state() == input::key_state::press)
     {
-        std::cout << "GL_INVALID_OPERATION\n";
+         camera_.ProcessKeyboard(Camera_Movement::RIGHT, 0.1f);
+    }
+    if(left_input_->get_state() == input::key_state::press)
+    {
+        camera_.ProcessKeyboard(Camera_Movement::LEFT, 0.1f);
+    }
+
+    GLenum error = glGetError();
+    if (error == GL_INVALID_OPERATION)
+    {
+        LOG_ERRORF("OpenGL Error: {}", error);
     }
 }
 
+
+opengl_render_system::opengl_render_system()
+{
+}
 
 opengl_render_system::~opengl_render_system()
 {

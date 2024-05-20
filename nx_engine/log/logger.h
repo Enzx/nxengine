@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <iostream>
 #include <chrono>
 #include <source_location>
 #include <string>
@@ -30,6 +31,7 @@ public:
 private:
     static std::string get_current_time();
     static std::string get_log_level_text(const log_level& level);
+    static std::string get_log_level_color(const log_level& level);
 
     logger() = default;
     ~logger() = default;
@@ -67,4 +69,18 @@ private:
 #define LOG_WARNINGF(fmt, ...)
 #define LOG_ERRORF(fmt, ...)
 #define LOG_CRITICALF(fmt, ...)
+#endif
+
+
+#ifdef DEBUG
+#define GL_CHECK_ERROR() \
+do { \
+GLenum err = glGetError(); \
+while (err != GL_NO_ERROR) { \
+LOG_ERRORF("OpenGL Error: {:x}", err); \
+std::cin.get(); \
+} \
+} while (0)
+#else
+#define GL_CHECK_ERROR() ((void)0)
 #endif

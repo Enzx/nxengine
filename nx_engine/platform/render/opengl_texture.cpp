@@ -5,11 +5,20 @@
 
 #include "../../log/logger.h"
 
-
-
+std::vector< std::string> opengl_texture::our_loaded_textures;
 void opengl_texture::load(const std::string& pth)
 {
+   
     path = pth;
+    const std::string fpath = path;
+    if (std::ranges::find(opengl_texture::our_loaded_textures, fpath) != our_loaded_textures.end())
+    {
+        return;
+    }
+    else
+    {
+        opengl_texture::our_loaded_textures.push_back(fpath);
+    }
     stbi_set_flip_vertically_on_load(true);
     void* data = stbi_load(path.c_str(), &width_, &height_, &channels_, 0);
     if (data)
@@ -30,6 +39,8 @@ void opengl_texture::load(const std::string& pth)
             return;
         }
         glGenerateMipmap(GL_TEXTURE_2D);
+
+        LOG_INFOF("Texture loaded: {}", path);
     }
     else
     {
@@ -43,12 +54,17 @@ void opengl_texture::load(const std::string& pth)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     stbi_image_free(data);
-
 }
 
 void opengl_texture::bind() const
 {
     glBindTexture(GL_TEXTURE_2D, id);
+    GLenum error = glGetError();
+    if (error == GL_INVALID_OPERATION)
+    {
+        LOG_ERRORF(" opengl_texture::bind Error: {} path: {}, id: {}", error, path, id);
+        __debugbreak();
+    }
 }
 
 void opengl_texture::unbind() const
@@ -59,5 +75,5 @@ void opengl_texture::unbind() const
 opengl_texture::~opengl_texture()
 {
     glDeleteTextures(1, &id);
-    
+
 }
