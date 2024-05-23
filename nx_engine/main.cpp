@@ -14,10 +14,9 @@
 #include "window/window_events.h"
 
 
-#include "data_types/service_locator/policy/thread_policy.h"
 #include "platform/input/glfw_input_system.h"
 #include "platform/input/glfw_keyboard_binding.h"
-#include "platform/render/opengl_render_system.h"
+#include "platform/render/opengl/opengl_render_system.h"
 
 std::shared_ptr<interface_window> main_window;
 bool running = true;

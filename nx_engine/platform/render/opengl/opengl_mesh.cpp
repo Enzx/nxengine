@@ -23,48 +23,62 @@ void opengl_mesh::unbind() const
     glBindVertexArray(0);
 }
 
+GLenum shader_data_type_to_opengl(render::buffer_data_type type)
+{
+    switch (type)
+    {
+    case render::buffer_data_type::float1: return GL_FLOAT;
+    case render::buffer_data_type::float2: return GL_FLOAT;
+    case render::buffer_data_type::float3: return GL_FLOAT;
+    case render::buffer_data_type::float4: return GL_FLOAT;
+    case render::buffer_data_type::mat3: return GL_FLOAT;
+    case render::buffer_data_type::mat4: return GL_FLOAT;
+    case render::buffer_data_type::int1: return GL_INT;
+    case render::buffer_data_type::int2: return GL_INT;
+    case render::buffer_data_type::int3: return GL_INT;
+    case render::buffer_data_type::int4: return GL_INT;
+    case render::buffer_data_type::bool1: return GL_BOOL;
+    case render::buffer_data_type::bool2: return GL_BOOL;
+    case render::buffer_data_type::bool3: return GL_BOOL;
+    case render::buffer_data_type::bool4: return GL_BOOL;
+    case render::buffer_data_type::none: LOG_ERROR("NONE buffer data type: none");
+    
+    }
+    return GL_FLOAT;
+}
+
 void opengl_mesh::setup_mesh()
 {
     // create buffers/arrays
     glGenVertexArrays(1, &vao_);
-    glGenBuffers(1, &vbo_);
-    glGenBuffers(1, &ebo_);
-
     glBindVertexArray(vao_);
-    // load data into vertex buffers
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    // A great thing about structs is that their memory layout is sequential for all its items.
-    // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-    // again translates to 3/2 floats which translates to a byte array.
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+    vertex_buffer_ = std::make_unique<opengl::vertex_buffer>((float*)&vertices[0],
+                                                             vertices.size() * sizeof(Vertex));
+    index_buffer_ = std::make_unique<opengl::index_buffer>(&indices[0], indices.size());
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    render::buffer_layout layout = {
+        {render::buffer_data_type::float3, "aPos"},
+        {render::buffer_data_type::float3, "aNormal"},
+        {render::buffer_data_type::float2, "aTexCoords"},
+        {render::buffer_data_type::float3, "aTangent"},
+        {render::buffer_data_type::float3, "aBitangent"},
+        {render::buffer_data_type::int4, "bone_ids"},
+        {render::buffer_data_type::float4, "weights"}
+    };
 
-    // set the vertex attribute pointers
-    // vertex Positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    // vertex normals
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-    // vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-    // vertex tangent
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
-    // vertex bitangent
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
-    // ids
-    glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, bone_ids_));
+    int index = 0;
+    for (const auto& element : layout.get_elements())
+    {
+        glEnableVertexAttribArray(index);
+        glVertexAttribPointer(index,
+                              element.get_component_count(),
+                              shader_data_type_to_opengl(element.get_type()),
+                              element.get_normalized() ? GL_TRUE : GL_FALSE,
+                              layout.get_stride(), (const void*)element.get_offset());
+        index++;
+    }
 
-    // weights
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights_));
-    glBindVertexArray(0);
+    
     GL_CHECK_ERROR();
 }
 

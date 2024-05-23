@@ -4,8 +4,10 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include "buffers.h"
 #include "opengl_shader.h"
 #define MAX_BONE_INFLUENCE 4
+
 struct Vertex
 {
     glm::vec3 Position;
@@ -28,7 +30,7 @@ class opengl_mesh
 {
 public:
     std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<uint32_t> indices;
     std::vector<Texture> textures;
 
     opengl_mesh() = delete;
@@ -43,6 +45,8 @@ public:
     void draw(opengl_shader& shader) const;
 
 private:
-    unsigned int  vao_{}, vbo_{},  ebo_{}; // vertex array object, vertex buffer object, element buffer object
+    unsigned int vao_{}; // vertex array object, vertex buffer object, element buffer object
+    std::unique_ptr<opengl::vertex_buffer> vertex_buffer_;
+    std::unique_ptr<opengl::index_buffer> index_buffer_;
     void setup_mesh();
 };
