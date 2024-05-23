@@ -11,7 +11,7 @@
 class model
 {
 public:
-    model(const char* path);
+    explicit model(const std::string& path);
     void draw(opengl_shader& shader) const;
 private:
     std::vector<opengl_mesh> meshes_;

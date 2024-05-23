@@ -12,10 +12,11 @@
 #include "platform/window/glfw_window_system.h"
 #include "window/interface_window.h"
 #include "window/window_events.h"
-#include "platform/input/glfw_input.h"
 
 
 #include "data_types/service_locator/policy/thread_policy.h"
+#include "platform/input/glfw_input_system.h"
+#include "platform/input/glfw_keyboard_binding.h"
 #include "platform/render/opengl_render_system.h"
 
 std::shared_ptr<interface_window> main_window;
@@ -54,22 +55,20 @@ int main()
     main_window = window_system->create_window(640, 480, "Hello World");
     window_system->set_current_window(main_window);
     main_window->events->subscribe<window::events::close>(&on_window_close);
-    const auto input_system = services.add<platform::input::glfw_input>();
+    const auto input_system = services.add<glfw_input_system>();
     const auto renderer = services.add<opengl_render_system>();
-
 
 
     glfwSetFramebufferSizeCallback(static_cast<GLFWwindow*>(main_window->get_raw_pointer()), framebuffer_size_callback);
 
-    auto close_input_action = std::make_shared<input::input_action>(input::device_type::keyboard,
-                                                                    input::key_code::escape, "Close_Window");
+    const auto close_input_action =
+        std::make_shared<input::input_action>(new glfw_keyboard_binding(input::key_code::escape),"close");
 
 
     input_system->add_input_action(close_input_action);
 
     while (running)
     {
-
         input_system->update();
         renderer->update();
         window_system->update();

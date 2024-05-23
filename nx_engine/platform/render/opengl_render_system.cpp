@@ -11,9 +11,7 @@
 #include "model.h"
 #include "opengl_shader.h"
 #include "../../log/logger.h"
-#include "../input/glfw_input.h"
 #include "GLFW/glfw3.h"
-#include "../../data_types/service_locator/policy/thread_policy.h"
 
 
 namespace service::policy
@@ -24,18 +22,18 @@ namespace service::policy
 void opengl_render_system::on_create(service::locator<>* locator)
 {
     LOG_DEBUGF("opengl_render_system::on_create");
-    right_input_ = std::make_shared<
-        input::input_action>(input::device_type::keyboard, input::key_code::d, "Move_Right");
-    left_input_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::a, "Move_Left");
-    rotate_right_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::e,
-                                                          "Rotate_Right");
-    rotate_left_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::q,
-                                                         "Rotate_Left");
-    const auto input_system = locator->get<platform::input::glfw_input>();
-    input_system->add_input_action(right_input_);
-    input_system->add_input_action(left_input_);
-    input_system->add_input_action(rotate_right_);
-    input_system->add_input_action(rotate_left_);
+    // right_input_ = std::make_shared<
+    //     input::input_action>(input::device_type::keyboard, input::key_code::d, "Move_Right");
+    // left_input_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::a, "Move_Left");
+    // rotate_right_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::e,
+    //                                                       "Rotate_Right");
+    // rotate_left_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::q,
+    //                                                      "Rotate_Left");
+    // const auto input_system = locator->get<platform::input::glfw_input>();
+    // input_system->add_input_action(right_input_);
+    // input_system->add_input_action(left_input_);
+    // input_system->add_input_action(rotate_right_);
+    // input_system->add_input_action(rotate_left_);
     
     LOG_TRACE("opengl_render_system::on_create");
 
@@ -95,14 +93,14 @@ void opengl_render_system::update()
     GL_CHECK_ERROR();
 
     our_model->draw(our_shader_);
-    if(right_input_->get_state() == input::key_state::press)
-    {
-         camera_.ProcessKeyboard(Camera_Movement::RIGHT, 0.1f);
-    }
-    if(left_input_->get_state() == input::key_state::press)
-    {
-        camera_.ProcessKeyboard(Camera_Movement::LEFT, 0.1f);
-    }
+    // if(right_input_->get_state() == input::key_state::press)
+    // {
+    //      camera_.ProcessKeyboard(Camera_Movement::RIGHT, 0.1f);
+    // }
+    // if(left_input_->get_state() == input::key_state::press)
+    // {
+    //     camera_.ProcessKeyboard(Camera_Movement::LEFT, 0.1f);
+    // }
 
     GLenum error = glGetError();
     if (error == GL_INVALID_OPERATION)

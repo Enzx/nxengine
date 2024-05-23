@@ -8,7 +8,7 @@
 #include "../../log/logger.h"
 #include "glad/glad.h"
 
-model::model(const char* path)
+model::model(const std::string& path)
 {
     load_model(path);
 }
