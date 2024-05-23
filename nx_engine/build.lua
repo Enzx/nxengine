@@ -47,8 +47,7 @@ project "nx_engine"
         "%{wks.location}/nx_engine/**.lua", 
 		"%{wks.location}/nx_engine/**.md",
 	-- assets
-		"%{wks.location}/assets/**.frag",
-		"%{wks.location}/assets/**.vert",
+		"%{wks.location}/assets/**.**",
     }
 	
 	
