@@ -5,7 +5,6 @@
 #include <glm/vec3.hpp>
 
 #include "opengl_shader.h"
-#include "opengl_texture.h"
 #define MAX_BONE_INFLUENCE 4
 struct Vertex
 {

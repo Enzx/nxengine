@@ -2,7 +2,7 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 
-#include "../../window/window_events.h"
+#include "window/window_events.h"
 
 window::glfw_window::glfw_window(const int width, const int height, std::string& title) : interface_window(
     width, height, title)

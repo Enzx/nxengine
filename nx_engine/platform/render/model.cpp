@@ -5,7 +5,7 @@
 #include <stb_image.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
-#include "../../log/logger.h"
+#include "log/logger.h"
 #include "glad/glad.h"
 
 model::model(const std::string& path)

@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../log/logger.h"
+#include "log/logger.h"
 
 opengl_shader::opengl_shader(const wchar_t* vertex_shader_path, const wchar_t* fragment_shader_path)
 {

@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 
 #include "opengl_texture.h"
-#include "../../log/logger.h"
+#include "log/logger.h"
 
 opengl_mesh::opengl_mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {

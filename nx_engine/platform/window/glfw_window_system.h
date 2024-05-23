@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "../../window/window_system.h"
-#include "../../window/window_events.h"
-#include "../../data_types/service_locator/locator.h"
+#include "window/window_system.h"
+#include "window/window_events.h"
+#include "data_types/service_locator/locator.h"
 #include <vector>
 
 

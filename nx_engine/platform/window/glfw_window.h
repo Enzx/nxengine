@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../../window/interface_window.h"
+#include "window/interface_window.h"
 #include "GLFW/glfw3.h"
 
 namespace window

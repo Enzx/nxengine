@@ -3,7 +3,7 @@
 #include "stb_image.h"
 #include <glad/glad.h>
 
-#include "../../log/logger.h"
+#include "log/logger.h"
 
 std::vector< std::string> opengl_texture::our_loaded_textures;
 void opengl_texture::load(const std::string& pth)

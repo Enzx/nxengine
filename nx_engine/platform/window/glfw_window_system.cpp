@@ -3,8 +3,8 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 
-#include "../../window/window_events.h"
-#include "../../event/event_system.h"
+#include "window/window_events.h"
+#include "event/event_system.h"
 
 void window::glfw_window_system::on_glfw_error(int error, const char* description)
 {

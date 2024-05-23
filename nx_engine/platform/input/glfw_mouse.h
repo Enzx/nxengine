@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "../../input/mouse.h"
-#include "../../log/logger.h"
+#include "input/mouse.h"
+#include "log/logger.h"
 #include "GLFW/glfw3.h"
 
 

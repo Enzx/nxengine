@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "glfw_mouse.h"
-#include "../../input/input_system.h"
-#include "../../data_types/service_locator/locator.h"
+#include "data_types/service_locator/locator.h"
+#include "input/input_system.h"
 
 class glfw_input_system final : public input::input_system
 {

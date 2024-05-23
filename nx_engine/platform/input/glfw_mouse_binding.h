@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "../../input/input_binding.h"
-#include "backends/imgui_impl_glfw.h"
+#include "input/input_binding.h"
 #include "GLFW/glfw3.h"
 
 class glfw_mouse_binding final : public input::mouse_binding

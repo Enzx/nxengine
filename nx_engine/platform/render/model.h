@@ -4,7 +4,6 @@
 
 #include "opengl_mesh.h"
 #include "opengl_shader.h"
-#include "opengl_texture.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <filesystem>

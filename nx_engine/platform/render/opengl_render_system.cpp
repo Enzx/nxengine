@@ -10,7 +10,7 @@
 
 #include "model.h"
 #include "opengl_shader.h"
-#include "../../log/logger.h"
+#include "log/logger.h"
 #include "GLFW/glfw3.h"
 
 

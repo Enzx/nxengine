@@ -24,7 +24,9 @@ project "nx_engine"
 		"../vendors/imgui/",
 		"../vendors/glad/include/",
 		"../vendors/assimp/include/",
-		"../vendors/include/"
+		"../vendors/include/",
+		"../nx_engine/",
+		
 	}
 	
 	-- defines { "ASSIMP_STATIC" }

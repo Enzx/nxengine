@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../../input/input_binding.h"
+#include "input/input_binding.h"
 #include <GLFW/glfw3.h>
 
 class glfw_keyboard_binding final : public input::keyboard_binding
