@@ -1,16 +1,21 @@
 ﻿#pragma once
 #include "render/buffers.h"
+
 namespace opengl
 {
     class vertex_buffer : public render::vertex_buffer
     {
-    public: 
+    public:
         vertex_buffer(float* vertices, uint32_t size);
         ~vertex_buffer() override;
         void bind() const override;
         void unbind() const override;
+        void set_layout(const render::buffer_layout& layout) override;
+        const render::buffer_layout& get_layout() const override;
+
     private:
         uint32_t id_{};
+        render::buffer_layout layout_{};
     };
 
     class index_buffer : public render::index_buffer
@@ -21,8 +26,12 @@ namespace opengl
         void bind() const override;
         void unbind() const override;
         [[nodiscard]] uint32_t get_count() const override { return count_; }
+        void set_layout(const render::buffer_layout& layout) override;
+        [[nodiscard]] const render::buffer_layout& get_layout() const override;
+
     private:
         uint32_t id_{};
-        uint32_t count_;
+        uint32_t count_{};
+        render::buffer_layout layout_{};
     };
 }

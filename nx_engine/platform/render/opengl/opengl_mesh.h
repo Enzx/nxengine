@@ -6,6 +6,7 @@
 
 #include "buffers.h"
 #include "opengl_shader.h"
+#include "opengl_vertex_array.h"
 #define MAX_BONE_INFLUENCE 4
 
 struct Vertex
@@ -45,8 +46,8 @@ public:
     void draw(opengl_shader& shader) const;
 
 private:
-    unsigned int vao_{}; // vertex array object, vertex buffer object, element buffer object
-    std::unique_ptr<opengl::vertex_buffer> vertex_buffer_;
-    std::unique_ptr<opengl::index_buffer> index_buffer_;
+std::shared_ptr<opengl::opengl_vertex_array> vertex_array_;
+    std::shared_ptr<opengl::vertex_buffer> vertex_buffer_;
+    std::shared_ptr<opengl::index_buffer> index_buffer_;
     void setup_mesh();
 };

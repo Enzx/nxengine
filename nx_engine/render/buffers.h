@@ -7,7 +7,8 @@ namespace render
 {
     enum class buffer_data_type
     {
-        none = 0, float1, float2, float3, float4, mat3, mat4, int1, int2, int3, int4, bool1, bool2, bool3, bool4
+        none = 0,
+        float1, float2, float3, float4, mat3, mat4, int1, int2, int3, int4, bool1, bool2, bool3, bool4
     };
 
     class buffer_element
@@ -39,7 +40,7 @@ namespace render
         
         buffer_element() = default;
 
-        buffer_element(const buffer_data_type& type, const std::string& name, bool normalized = false)
+        buffer_element(const buffer_data_type& type, const std::string& name, const bool normalized = false)
             : type_(type), name_(name), size_(buffer_data_type_size(type)), offset_(0), normalized_(normalized)
         {
         }
@@ -125,6 +126,9 @@ namespace render
         virtual ~vertex_buffer() = default;
         virtual void bind() const = 0;
         virtual void unbind() const = 0;
+        virtual void set_layout(const buffer_layout& layout) = 0;
+        virtual const buffer_layout& get_layout() const = 0;
+        
     };
 
     class index_buffer
@@ -135,6 +139,8 @@ namespace render
         virtual void bind() const = 0;
         virtual void unbind() const = 0;
         virtual uint32_t get_count() const = 0;
+        virtual void set_layout(const buffer_layout& layout) = 0;
+        virtual const buffer_layout& get_layout() const = 0;
     };
 
     class buffer

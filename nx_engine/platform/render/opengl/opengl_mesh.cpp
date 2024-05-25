@@ -15,46 +15,22 @@ opengl_mesh::opengl_mesh(std::vector<Vertex> vertices, std::vector<unsigned int>
 
 void opengl_mesh::bind() const
 {
-    glBindVertexArray(vao_);
+    vertex_array_->bind();
 }
 
 void opengl_mesh::unbind() const
 {
-    glBindVertexArray(0);
+    vertex_array_->unbind();
 }
 
-GLenum shader_data_type_to_opengl(render::buffer_data_type type)
-{
-    switch (type)
-    {
-    case render::buffer_data_type::float1: return GL_FLOAT;
-    case render::buffer_data_type::float2: return GL_FLOAT;
-    case render::buffer_data_type::float3: return GL_FLOAT;
-    case render::buffer_data_type::float4: return GL_FLOAT;
-    case render::buffer_data_type::mat3: return GL_FLOAT;
-    case render::buffer_data_type::mat4: return GL_FLOAT;
-    case render::buffer_data_type::int1: return GL_INT;
-    case render::buffer_data_type::int2: return GL_INT;
-    case render::buffer_data_type::int3: return GL_INT;
-    case render::buffer_data_type::int4: return GL_INT;
-    case render::buffer_data_type::bool1: return GL_BOOL;
-    case render::buffer_data_type::bool2: return GL_BOOL;
-    case render::buffer_data_type::bool3: return GL_BOOL;
-    case render::buffer_data_type::bool4: return GL_BOOL;
-    case render::buffer_data_type::none: LOG_ERROR("NONE buffer data type: none");
-    
-    }
-    return GL_FLOAT;
-}
 
 void opengl_mesh::setup_mesh()
 {
     // create buffers/arrays
-    glGenVertexArrays(1, &vao_);
-    glBindVertexArray(vao_);
-    vertex_buffer_ = std::make_unique<opengl::vertex_buffer>((float*)&vertices[0],
+    vertex_array_ = std::make_shared<opengl::opengl_vertex_array>();
+    vertex_buffer_ = std::make_shared<opengl::vertex_buffer>((float*)&vertices[0],
                                                              vertices.size() * sizeof(Vertex));
-    index_buffer_ = std::make_unique<opengl::index_buffer>(&indices[0], indices.size());
+    index_buffer_ = std::make_shared<opengl::index_buffer>(&indices[0], indices.size());
 
     render::buffer_layout layout = {
         {render::buffer_data_type::float3, "aPos"},
@@ -63,21 +39,14 @@ void opengl_mesh::setup_mesh()
         {render::buffer_data_type::float3, "aTangent"},
         {render::buffer_data_type::float3, "aBitangent"},
         {render::buffer_data_type::int4, "bone_ids"},
-        {render::buffer_data_type::float4, "weights"}
+        {render::buffer_data_type::int4, "weights"}
     };
 
-    int index = 0;
-    for (const auto& element : layout.get_elements())
-    {
-        glEnableVertexAttribArray(index);
-        glVertexAttribPointer(index,
-                              element.get_component_count(),
-                              shader_data_type_to_opengl(element.get_type()),
-                              element.get_normalized() ? GL_TRUE : GL_FALSE,
-                              layout.get_stride(), (const void*)element.get_offset());
-        index++;
-    }
+    vertex_buffer_->set_layout(layout);
+    index_buffer_->set_layout(layout);
 
+    vertex_array_->add_vertex_buffer(vertex_buffer_);
+    vertex_array_->set_index_buffer(index_buffer_);
     
     GL_CHECK_ERROR();
 }
@@ -114,10 +83,10 @@ void opengl_mesh::draw(opengl_shader& shader) const
     }
 
     // draw mesh
-    glBindVertexArray(vao_);
+    vertex_array_->bind();
     GL_CHECK_ERROR();
 
-    glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES,   index_buffer_->get_count() , GL_UNSIGNED_INT, nullptr);
     GL_CHECK_ERROR();
 
     glBindVertexArray(0);

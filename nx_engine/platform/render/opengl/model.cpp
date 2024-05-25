@@ -29,7 +29,8 @@ void model::load_model(const std::string& path)
                                            aiProcess_Triangulate |
                                            aiProcess_GenSmoothNormals |
                                            aiProcess_FlipUVs |
-                                           aiProcess_CalcTangentSpace);
+                                           aiProcess_CalcTangentSpace
+                                           );
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
