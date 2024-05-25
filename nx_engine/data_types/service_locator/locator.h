@@ -7,7 +7,7 @@
 #include "detail/has_on_create.h"
 #include "policy/thread_policy.h"
 
-namespace service
+namespace nx::service
 {
   
 

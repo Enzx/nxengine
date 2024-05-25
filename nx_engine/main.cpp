@@ -1,22 +1,20 @@
 #define GLFW_INCLUDE_NONE
-#define ASSIMP_STATIC
 #include <csignal>
 #include <iostream>
 #include <filesystem>
 
 #include "imgui.h"
-#include "data_types/service_locator/locator.h"
 #include "event/event_system.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "platform/window/glfw_window_system.h"
+#include "window/glfw_window_system.h"
 #include "window/interface_window.h"
 #include "window/window_events.h"
 
 
-#include "platform/input/glfw_input_system.h"
-#include "platform/input/glfw_keyboard_binding.h"
-#include "platform/render/opengl/opengl_render_system.h"
+#include "input/glfw_input_system.h"
+#include "input/glfw_keyboard_binding.h"
+#include "render/opengl/opengl_render_system.h"
 
 std::shared_ptr<interface_window> main_window;
 bool running = true;
@@ -49,7 +47,7 @@ int main()
         return -1;
     }
 
-    service::locator<> services;
+    nx::service::locator<> services;
     const auto window_system = services.add<window::glfw_window_system>();
     main_window = window_system->create_window(640, 480, "Hello World");
     window_system->set_current_window(main_window);
@@ -61,7 +59,7 @@ int main()
     glfwSetFramebufferSizeCallback(static_cast<GLFWwindow*>(main_window->get_raw_pointer()), framebuffer_size_callback);
 
     const auto close_input_action =
-        std::make_shared<input::input_action>(new glfw_keyboard_binding(input::key_code::escape),"close");
+        std::make_shared<nx::input::input_action>(new glfw_keyboard_binding(nx::input::key_code::escape),"close");
 
 
     input_system->add_input_action(close_input_action);
@@ -72,7 +70,7 @@ int main()
         renderer->update();
         window_system->update();
 
-        if (close_input_action->get_state() == input::key_state::press)
+        if (close_input_action->get_state() == nx::input::key_state::press)
             main_window->close();
     }
 

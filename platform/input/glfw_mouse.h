@@ -4,7 +4,7 @@
 #include "GLFW/glfw3.h"
 
 
-class glfw_mouse final : public input::mouse
+class glfw_mouse final : public nx::input::mouse
 {
 public:
     glfw_mouse(const glfw_mouse& other) = delete;
@@ -14,7 +14,7 @@ public:
 
     glfw_mouse()
     {
-        LOG_TRACE("glfw_mouse::glfw_mouse()");
+        NX_LOG_TRACE("glfw_mouse::glfw_mouse()");
         glfwSetCursorPosCallback(glfwGetCurrentContext(), cursor_position_callback);
         glfwSetScrollCallback(glfwGetCurrentContext(), scroll_callback);
     }

@@ -23,7 +23,7 @@ void model::draw(opengl_shader& shader) const
 
 void model::load_model(const std::string& path)
 {
-    LOG_DEBUGF("Load_model: {}", path);
+    NX_LOG_DEBUGF("Load_model: {}", path);
     Assimp::Importer import;
     const aiScene* scene = import.ReadFile(path,
                                            aiProcess_Triangulate |
@@ -34,7 +34,7 @@ void model::load_model(const std::string& path)
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        LOG_ERRORF("ERROR::ASSIMP::{}", import.GetErrorString());
+        NX_LOG_ERRORF("ERROR::ASSIMP::{}", import.GetErrorString());
         return;
     }
     std::string p = path;
@@ -50,7 +50,7 @@ int max_node_depth = 100;
 
 void model::process_node(const aiNode* node, const aiScene* scene)
 {
-    LOG_TRACEF("Process_node: {}", node->mName.C_Str());
+    NX_LOG_TRACEF("Process_node: {}", node->mName.C_Str());
 
     max_node_depth--;
     if (max_node_depth == 0)
@@ -72,30 +72,30 @@ void model::process_node(const aiNode* node, const aiScene* scene)
 
 opengl_mesh model::process_mesh(aiMesh* mesh, const aiScene* scene)
 {
-    LOG_TRACEF("Process_mesh: {}", mesh->mName.C_Str());
+    NX_LOG_TRACEF("Process_mesh: {}", mesh->mName.C_Str());
     // data to fill
-    std::vector<Vertex> vertices;
+    std::vector<vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<texture> textures;
 
     // walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
-        Vertex vertex;
+        vertex vertex;
         glm::vec3 vector;
         // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
         // positions
         vector.x = mesh->mVertices[i].x;
         vector.y = mesh->mVertices[i].y;
         vector.z = mesh->mVertices[i].z;
-        vertex.Position = vector;
+        vertex.position = vector;
         // normals
         if (mesh->HasNormals())
         {
             vector.x = mesh->mNormals[i].x;
             vector.y = mesh->mNormals[i].y;
             vector.z = mesh->mNormals[i].z;
-            vertex.Normal = vector;
+            vertex.normal = vector;
         }
         // texture coordinates
         if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
@@ -105,20 +105,20 @@ opengl_mesh model::process_mesh(aiMesh* mesh, const aiScene* scene)
             // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = vec;
+            vertex.tex_coords = vec;
             // tangent
             vector.x = mesh->mTangents[i].x;
             vector.y = mesh->mTangents[i].y;
             vector.z = mesh->mTangents[i].z;
-            vertex.Tangent = vector;
+            vertex.tangent = vector;
             // bitangent
             vector.x = mesh->mBitangents[i].x;
             vector.y = mesh->mBitangents[i].y;
             vector.z = mesh->mBitangents[i].z;
-            vertex.Bitangent = vector;
+            vertex.bitangent = vector;
         }
         else
-            vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+            vertex.tex_coords = glm::vec2(0.0f, 0.0f);
 
         vertices.push_back(vertex);
     }
@@ -141,29 +141,29 @@ opengl_mesh model::process_mesh(aiMesh* mesh, const aiScene* scene)
 
     stbi_set_flip_vertically_on_load(true);
     // 1. diffuse maps
-    std::vector<Texture> diffuseMaps =
+    std::vector<texture> diffuseMaps =
         load_material_textures(material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
     // 2. specular maps
-    std::vector<Texture> specularMaps = load_material_textures(material, aiTextureType_SPECULAR,
+    std::vector<texture> specularMaps = load_material_textures(material, aiTextureType_SPECULAR,
                                                                "texture_specular");
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     // 3. normal maps
-    std::vector<Texture> normalMaps = load_material_textures(material, aiTextureType_HEIGHT, "texture_normal");
+    std::vector<texture> normalMaps = load_material_textures(material, aiTextureType_HEIGHT, "texture_normal");
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     // 4. height maps
-    std::vector<Texture> heightMaps = load_material_textures(material, aiTextureType_AMBIENT, "texture_height");
+    std::vector<texture> heightMaps = load_material_textures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
     // return a mesh object created from the extracted mesh data
     return opengl_mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> model::load_material_textures(aiMaterial* mat, aiTextureType type, std::string type_name)
+std::vector<texture> model::load_material_textures(aiMaterial* mat, aiTextureType type, std::string type_name)
 {
-    LOG_TRACEF("Load_material_textures: {}", type_name);
+    NX_LOG_TRACEF("Load_material_textures: {}", type_name);
 
-    std::vector<Texture> textures;
+    std::vector<texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
@@ -183,7 +183,7 @@ std::vector<Texture> model::load_material_textures(aiMaterial* mat, aiTextureTyp
         if (!skip)
         {
             // if texture hasn't been loaded already, load it
-            Texture texture;
+            texture texture;
             texture.id = texture_from_file(str.C_Str(), this->directory_.string(), false);
             texture.type = type_name;
             texture.path = str.C_Str();
@@ -200,7 +200,7 @@ unsigned int model::texture_from_file(const char* path, const std::string& direc
 {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
-    LOG_TRACEF("Texture_from_file: {}", filename);
+    NX_LOG_TRACEF("Texture_from_file: {}", filename);
 
     unsigned int textureID;
     glGenTextures(1, &textureID);

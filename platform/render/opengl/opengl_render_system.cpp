@@ -19,9 +19,9 @@ namespace service::policy
     class thread_safe;
 }
 
-void opengl_render_system::on_create(service::locator<>* locator)
+void opengl_render_system::on_create(nx::service::locator<>* locator)
 {
-    LOG_DEBUGF("opengl_render_system::on_create");
+    NX_LOG_DEBUGF("opengl_render_system::on_create");
     // right_input_ = std::make_shared<
     //     input::input_action>(input::device_type::keyboard, input::key_code::d, "Move_Right");
     // left_input_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::a, "Move_Left");
@@ -35,11 +35,11 @@ void opengl_render_system::on_create(service::locator<>* locator)
     // input_system->add_input_action(rotate_right_);
     // input_system->add_input_action(rotate_left_);
     
-    LOG_TRACE("opengl_render_system::on_create");
+    NX_LOG_TRACE("opengl_render_system::on_create");
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        LOG_ERROR("Failed to initialize GLAD");
+        NX_LOG_ERROR("Failed to initialize GLAD");
         return;
     }
     // During init, enable debug output
@@ -60,9 +60,9 @@ void opengl_render_system::on_create(service::locator<>* locator)
     const std::filesystem::path vertex_shader_path = assets_path_shaders / "default.vert";
     const std::filesystem::path fragment_shader_path = assets_path_shaders / "default.frag";
 
-    LOG_TRACE("Compile Shader Program");
+    NX_LOG_TRACE("Compile Shader Program");
     our_shader_.compile(vertex_shader_path.c_str(), fragment_shader_path.c_str());
-    LOG_TRACE("Loading Model");
+    NX_LOG_TRACE("Loading Model");
     our_model = new model((assets_path / "models" / "backpack.obj").string().c_str());
 
     // camera
@@ -87,8 +87,8 @@ void opengl_render_system::update()
 
     // render the loaded model
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // it's a bit too big for our scene, so scale it down
+    model = translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+    model = scale(model, glm::vec3(1.0f, 1.0f, 1.0f)); // it's a bit too big for our scene, so scale it down
     our_shader_.set_mat4("model", model);
     GL_CHECK_ERROR();
 
@@ -105,7 +105,7 @@ void opengl_render_system::update()
     GLenum error = glGetError();
     if (error == GL_INVALID_OPERATION)
     {
-        LOG_ERRORF("OpenGL Error: {}", error);
+        NX_LOG_ERRORF("OpenGL Error: {}", error);
     }
 }
 

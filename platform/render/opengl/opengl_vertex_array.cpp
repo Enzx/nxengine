@@ -19,7 +19,7 @@ GLenum shader_data_type_to_opengl(render::buffer_data_type type)
     case render::buffer_data_type::bool2: return GL_BOOL;
     case render::buffer_data_type::bool3: return GL_BOOL;
     case render::buffer_data_type::bool4: return GL_BOOL;
-    case render::buffer_data_type::none: LOG_ERROR("NONE buffer data type: none");
+    case render::buffer_data_type::none: NX_LOG_ERROR("NONE buffer data type: none");
     
     }
     return GL_FLOAT;
@@ -51,7 +51,7 @@ void opengl::opengl_vertex_array::add_vertex_buffer(const std::shared_ptr<render
     vertex_buffer->bind();
     
     const auto& layout = vertex_buffer->get_layout();
-    DEBUG_ASSERT(!layout.get_elements().empty(), "Vertex buffer layout is empty");
+    NX_DEBUG_ASSERT(!layout.get_elements().empty(), "Vertex buffer layout is empty");
     int index = 0;
     for (const auto& element : layout.get_elements())
     {

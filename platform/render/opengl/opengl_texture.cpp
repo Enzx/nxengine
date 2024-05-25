@@ -11,13 +11,13 @@ void opengl_texture::load(const std::string& pth)
    
     path = pth;
     const std::string fpath = path;
-    if (std::ranges::find(opengl_texture::our_loaded_textures, fpath) != our_loaded_textures.end())
+    if (std::ranges::find(our_loaded_textures, fpath) != our_loaded_textures.end())
     {
         return;
     }
     else
     {
-        opengl_texture::our_loaded_textures.push_back(fpath);
+        our_loaded_textures.push_back(fpath);
     }
     stbi_set_flip_vertically_on_load(true);
     void* data = stbi_load(path.c_str(), &width_, &height_, &channels_, 0);
@@ -35,16 +35,16 @@ void opengl_texture::load(const std::string& pth)
         }
         else
         {
-            LOG_ERROR("Unsupported number of channels in texture");
+            NX_LOG_ERROR("Unsupported number of channels in texture");
             return;
         }
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        LOG_INFOF("Texture loaded: {}", path);
+        NX_LOG_INFOF("Texture loaded: {}", path);
     }
     else
     {
-        LOG_ERROR("Failed to load texture");
+        NX_LOG_ERROR("Failed to load texture");
         return;
     }
 
@@ -62,7 +62,7 @@ void opengl_texture::bind() const
     GLenum error = glGetError();
     if (error == GL_INVALID_OPERATION)
     {
-        LOG_ERRORF(" opengl_texture::bind Error: {} path: {}, id: {}", error, path, id);
+        NX_LOG_ERRORF(" opengl_texture::bind Error: {} path: {}, id: {}", error, path, id);
         __debugbreak();
     }
 }

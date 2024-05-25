@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <type_traits>
 
-namespace service::detail
+namespace nx::service::detail
 {
     template <typename, typename TFunc>
     struct has_on_create

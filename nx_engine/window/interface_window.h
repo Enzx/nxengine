@@ -2,8 +2,7 @@
 #include <memory>
 #include <string>
 
-#include "../event/event_system.h"
-#include "GLFW/glfw3.h"
+#include "event/event_system.h"
 
 class interface_window
 {
@@ -17,7 +16,7 @@ public:
     interface_window(const int width, const int height, std::string& title) : width_(width), height_(height),
                                                                               title_(std::move(title))
     {
-        events = std::make_unique<event::event_system>();
+        events = std::make_unique<nx::event::event_system>();
         window_id_ = last_window_id_++;
     }
 
@@ -33,7 +32,7 @@ public:
 
     virtual void update() = 0;
     virtual void* get_raw_pointer() = 0;
-    std::unique_ptr<event::event_system> events = nullptr;
+    std::unique_ptr<nx::event::event_system> events = nullptr;
 
 protected:
     int width_ = 0;

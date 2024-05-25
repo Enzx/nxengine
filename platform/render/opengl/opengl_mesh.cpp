@@ -4,7 +4,7 @@
 #include "opengl_texture.h"
 #include "log/logger.h"
 
-opengl_mesh::opengl_mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+opengl_mesh::opengl_mesh(std::vector<vertex> vertices, std::vector<unsigned int> indices, std::vector<texture> textures)
 {
     this->vertices = vertices;
     this->indices = indices;
@@ -29,7 +29,7 @@ void opengl_mesh::setup_mesh()
     // create buffers/arrays
     vertex_array_ = std::make_shared<opengl::opengl_vertex_array>();
     vertex_buffer_ = std::make_shared<opengl::vertex_buffer>((float*)&vertices[0],
-                                                             vertices.size() * sizeof(Vertex));
+                                                             vertices.size() * sizeof(vertex));
     index_buffer_ = std::make_shared<opengl::index_buffer>(&indices[0], indices.size());
 
     render::buffer_layout layout = {

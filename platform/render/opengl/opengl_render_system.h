@@ -36,16 +36,16 @@ public:
     ~opengl_render_system() override;
     void update() override;
 
-    void on_create(service::locator<>* locator);
+    void on_create(nx::service::locator<>* locator);
 
 private:
     opengl_shader our_shader_{};
 
     Camera camera_{glm::vec3(0.0f, 0.0f, 3.0f)};
-    std::shared_ptr<input::input_action> right_input_;
-    std::shared_ptr<input::input_action> left_input_;
-    std::shared_ptr<input::input_action> rotate_right_;
-    std::shared_ptr<input::input_action> rotate_left_;
+    std::shared_ptr<nx::input::input_action> right_input_;
+    std::shared_ptr<nx::input::input_action> left_input_;
+    std::shared_ptr<nx::input::input_action> rotate_right_;
+    std::shared_ptr<nx::input::input_action> rotate_left_;
 
     model* our_model;
 };

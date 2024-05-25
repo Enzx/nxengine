@@ -3,7 +3,7 @@
 #include "data_types/service_locator/locator.h"
 #include "input/input_system.h"
 
-class glfw_input_system final : public input::input_system
+class glfw_input_system final : public nx::input::input_system
 {
 public:
     glfw_input_system() = default;
@@ -12,7 +12,7 @@ public:
     glfw_input_system& operator=(const glfw_input_system& other) = delete;
     glfw_input_system& operator=(glfw_input_system&& other) noexcept = delete;
 
-    void on_create(service::locator<>*)
+    void on_create(nx::service::locator<>*)
      {
          mouse_  = std::make_unique<glfw_mouse>();
      }

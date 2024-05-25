@@ -5,9 +5,9 @@
 #include <sstream>
 #include <ctime>
 
-logs::log_level logger::log_level_threshold = logs::log_level::trace;
+nx::logs::log_level nx::logs::logger::log_level_threshold = log_level::trace;
 
-std::string logger::get_current_time()
+std::string nx::logs::logger::get_current_time()
 {
     auto now = std::chrono::system_clock::now();
     auto now_time_t = std::chrono::system_clock::to_time_t(now);
@@ -27,42 +27,42 @@ std::string logger::get_current_time()
     return oss.str();
 }
 
-std::string logger::get_log_level_text(const logs::log_level& level)
+std::string nx::logs::logger::get_log_level_text(const log_level& level)
 {
     switch (level)
     {
-    case logs::log_level::trace: return "TRACE";
-    case logs::log_level::debug: return "DEBUG";
-    case logs::log_level::info: return "INFO";
-    case logs::log_level::warning: return "WARNING";
-    case logs::log_level::error: return "ERROR";
-    case logs::log_level::critical: return "CRITICAL";
+    case log_level::trace: return "TRACE";
+    case log_level::debug: return "DEBUG";
+    case log_level::info: return "INFO";
+    case log_level::warning: return "WARNING";
+    case log_level::error: return "ERROR";
+    case log_level::critical: return "CRITICAL";
     }
     return "UNKNOWN";
 }
 
-std::string logger::get_log_level_color(const logs::log_level& level)
+std::string nx::logs::logger::get_log_level_color(const log_level& level)
 {
 
     switch (level)
     {
-    case logs::log_level::trace:
+    case log_level::trace:
         return "\033[37m"; //white
-    case logs::log_level::debug:
+    case log_level::debug:
         return "\033[36m"; //cyan
-    case logs::log_level::info:  
+    case log_level::info:  
         return "\033[32m"; //green
-    case logs::log_level::warning:
+    case log_level::warning:
         return "\033[33m"; //yellow
-    case logs::log_level::error:
+    case log_level::error:
         return "\033[31m"; //red
-    case logs::log_level::critical:
+    case log_level::critical:
         return "\033[35m"; //magenta
     }
     return "\033[0m"; //default color
 }
 
-void logger::log_message(const logs::log_level& level, const std::string& message, const std::source_location& location)
+void nx::logs::logger::log_message(const log_level& level, const std::string& message, const std::source_location& location)
 {
     if (level < log_level_threshold) return;
     const auto level_text = get_log_level_text(level);

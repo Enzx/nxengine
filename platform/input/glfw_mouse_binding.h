@@ -2,10 +2,10 @@
 #include "input/input_binding.h"
 #include "GLFW/glfw3.h"
 
-class glfw_mouse_binding final : public input::mouse_binding
+class glfw_mouse_binding final : public nx::input::mouse_binding
 {
 public:
-    explicit glfw_mouse_binding(const input::mouse_button& mouse_button)
+    explicit glfw_mouse_binding(const nx::input::mouse_button& mouse_button)
         : mouse_binding(mouse_button),
           window_(glfwGetCurrentContext())
     {

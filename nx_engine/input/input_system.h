@@ -2,7 +2,7 @@
 #include "input_action.h"
 #include "mouse.h"
 
-namespace input
+namespace nx::input
 {
     class input_system 
     {

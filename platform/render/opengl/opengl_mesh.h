@@ -9,18 +9,18 @@
 #include "opengl_vertex_array.h"
 #define MAX_BONE_INFLUENCE 4
 
-struct Vertex
+struct vertex
 {
-    glm::vec3 Position;
-    glm::vec3 Normal;
-    glm::vec2 TexCoords;
-    glm::vec3 Tangent;
-    glm::vec3 Bitangent;
-    int bone_ids_[MAX_BONE_INFLUENCE];
-    int m_Weights_[MAX_BONE_INFLUENCE];
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec2 tex_coords;
+    glm::vec3 tangent;
+    glm::vec3 bitangent;
+    int bone_ids[MAX_BONE_INFLUENCE];
+    int m_weights[MAX_BONE_INFLUENCE];
 };
 
-struct Texture
+struct texture
 {
     unsigned int id;
     std::string type;
@@ -30,16 +30,16 @@ struct Texture
 class opengl_mesh
 {
 public:
-    std::vector<Vertex> vertices;
+    std::vector<vertex> vertices;
     std::vector<uint32_t> indices;
-    std::vector<Texture> textures;
+    std::vector<texture> textures;
 
     opengl_mesh() = delete;
     opengl_mesh(const opengl_mesh& other) = delete;
     opengl_mesh(opengl_mesh&& other) noexcept = default;
     opengl_mesh& operator=(const opengl_mesh& other) = delete;
     opengl_mesh& operator=(opengl_mesh&& other) noexcept = delete;
-    opengl_mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    opengl_mesh(std::vector<vertex> vertices, std::vector<unsigned int> indices, std::vector<texture> textures);
     ~opengl_mesh();
     void bind() const;
     void unbind() const;

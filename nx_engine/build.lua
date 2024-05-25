@@ -20,12 +20,13 @@ project "nx_engine"
 
 	includedirs 
 	{ 
-		"../vendors/GLFW/include/",
-		"../vendors/imgui/",
-		"../vendors/glad/include/",
-		"../vendors/assimp/include/",
-		"../vendors/include/",
-		"../nx_engine/",
+		"%{wks.location}/vendors/GLFW/include/",
+		"%{wks.location}/vendors/imgui/",
+		"%{wks.location}/vendors/glad/include/",
+		"%{wks.location}/vendors/assimp/include/",
+		"%{wks.location}/vendors/include/",
+		"%{wks.location}/nx_engine/",
+		"%{wks.location}/platform/",
 		
 	}
 	
@@ -38,14 +39,29 @@ project "nx_engine"
 		"%{wks.location}/nx_engine/**.hpp", 
 		"%{wks.location}/nx_engine/**.hh", 
 		"%{wks.location}/nx_engine/**.hxx",
+		
+		"%{wks.location}/platform/**.h", 
+		"%{wks.location}/platform/**.hpp", 
+		"%{wks.location}/platform/**.hh", 
+		"%{wks.location}/platform/**.hxx",
+
 	-- source files
         "%{wks.location}/nx_engine/**.c", 
 		"%{wks.location}/nx_engine/**.cpp", 
 		"%{wks.location}/nx_engine/**.cc", 
 		"%{wks.location}/nx_engine/**.cxx",
+		
+		"%{wks.location}/platform/**.c", 
+		"%{wks.location}/platform/**.cpp", 
+		"%{wks.location}/platform/**.cc", 
+		"%{wks.location}/platform/**.cxx",
+		
 	-- text files
         "%{wks.location}/nx_engine/**.lua", 
 		"%{wks.location}/nx_engine/**.md",
+		
+		"%{wks.location}/platform/**.lua", 
+		"%{wks.location}/platform/**.md",
 	-- assets
 		"%{wks.location}/assets/**.**",
     }

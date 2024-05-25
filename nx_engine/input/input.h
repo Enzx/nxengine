@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace input
+namespace nx::input
 {
      // Copied from GLFW3
     enum class key_code

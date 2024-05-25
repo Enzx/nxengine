@@ -5,14 +5,14 @@
 void glfw_mouse_binding::update()
 {
     triggered_ = false;
-    current_state_ = input::key_state::none;
+    current_state_ = nx::input::key_state::none;
      if( glfwGetMouseButton(window_, static_cast<int>(button)) == GLFW_PRESS )
      {
-         current_state_ = input::key_state::press;
+         current_state_ = nx::input::key_state::press;
      }
      if( glfwGetMouseButton(window_, static_cast<int>(button)) == GLFW_RELEASE )
      {
-         current_state_ = input::key_state::release;
+         current_state_ = nx::input::key_state::release;
      }
       if(current_state_ == target_state_)
       {

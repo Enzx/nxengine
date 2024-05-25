@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <memory>
 #include <string>
-#include "../event/event_system.h"
+#include "event/event_system.h"
 
 class interface_window;
 
@@ -21,7 +21,7 @@ namespace window
         [[nodiscard]] std::shared_ptr<interface_window> get_current_window() const { return current_window_; }
         void virtual set_current_window(const std::shared_ptr<interface_window>& window) { current_window_ = window; }
 
-        std::shared_ptr<event::event_system> events;
+        std::shared_ptr<nx::event::event_system> events;
 
     protected:
         std::shared_ptr<interface_window> current_window_;

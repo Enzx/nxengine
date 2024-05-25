@@ -7,7 +7,7 @@
 
 #include "handler.h"
 
-namespace event
+namespace nx::event
 {
     class handler_base;
 

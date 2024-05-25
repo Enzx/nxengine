@@ -32,7 +32,7 @@ namespace render
             case buffer_data_type::bool2: return 1 * 2;
             case buffer_data_type::bool3: return 1 * 3;
             case buffer_data_type::bool4: return 1 * 4;
-            case buffer_data_type::none: LOG_ERROR("NONE buffer data type: none");
+            case buffer_data_type::none: NX_LOG_ERROR("NONE buffer data type: none");
                 break;
             }
             return 0;
@@ -70,7 +70,7 @@ namespace render
             case buffer_data_type::bool2: return 2;
             case buffer_data_type::bool3: return 3;
             case buffer_data_type::bool4: return 4;
-            case buffer_data_type::none: LOG_ERROR("NONE buffer data type: none");
+            case buffer_data_type::none: NX_LOG_ERROR("NONE buffer data type: none");
                 break;
             }
             return 0;

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "input.h"
 
-namespace input
+namespace nx::input
 {
     class input_binding
     {

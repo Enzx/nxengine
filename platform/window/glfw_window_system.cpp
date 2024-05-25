@@ -11,9 +11,9 @@ void window::glfw_window_system::on_glfw_error(int error, const char* descriptio
     std::cout << "Error: " << error << " " << description << '\n';
 }
 
-void window::glfw_window_system::on_create(const service::locator<>* locator)
+void window::glfw_window_system::on_create(const nx::service::locator<>* locator)
 {
-    events = std::make_shared<::event::event_system>();
+    events = std::make_shared<nx::event::event_system>();
     if (glfwInit() == false)
     {
         std::cout << "Failed to initialize the glfw system";

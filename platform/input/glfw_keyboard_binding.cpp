@@ -4,17 +4,17 @@
 void glfw_keyboard_binding::update()
 {
     triggered_ = false;
-    current_state_ = input::key_state::none;
+    current_state_ = nx::input::key_state::none;
     switch (glfwGetKey(window_, static_cast<int>(key)))
     {
     case GLFW_PRESS:
-        current_state_ = input::key_state::press;
+        current_state_ = nx::input::key_state::press;
         break;
     case GLFW_RELEASE:
-        current_state_ = input::key_state::release;
+        current_state_ = nx::input::key_state::release;
         break;
     case GLFW_REPEAT:
-        current_state_ = input::key_state::hold;
+        current_state_ = nx::input::key_state::hold;
         break;
     default:
         break;

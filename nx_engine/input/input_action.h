@@ -5,7 +5,7 @@
 #include "../event/event_system.h"
 
 
-namespace input
+namespace nx::input
 {
     class input_action
     {

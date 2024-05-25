@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace event
+namespace nx::event
 {
     class handler_base
     {

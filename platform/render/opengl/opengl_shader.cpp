@@ -16,7 +16,7 @@ opengl_shader::opengl_shader(const wchar_t* vertex_shader_path, const wchar_t* f
 
 opengl_shader::~opengl_shader()
 {
-    LOG_DEBUGF("Deleting shader program {}", id);
+    NX_LOG_DEBUGF("Deleting shader program {}", id);
     glDeleteProgram(id);
 }
 
@@ -88,7 +88,7 @@ void opengl_shader::set_int(const char* name, const int value) const
     GLenum error = glGetError();
     if (error == GL_INVALID_OPERATION)
     {
-        LOG_ERRORF("OpenGL Error: {}", error);
+        NX_LOG_ERRORF("OpenGL Error: {}", error);
     }
 }
 
@@ -120,11 +120,11 @@ void opengl_shader::check_compile_status(const unsigned int shader, const char* 
     {
         char info_log[512];
         glGetShaderInfoLog(shader, 512, nullptr, info_log);
-        LOG_ERRORF("ERROR::SHADER::{}::COMPILATION_FAILED\n{}", type, info_log);
+        NX_LOG_ERRORF("ERROR::SHADER::{}::COMPILATION_FAILED\n{}", type, info_log);
     }
     else
     {
-        LOG_INFOF("Shader {} compiled successfully", type);
+        NX_LOG_INFOF("Shader {} compiled successfully", type);
     }
 }
 
@@ -136,10 +136,10 @@ void opengl_shader::check_link_status(const unsigned int program) const
     {
         char info_log[512];
         glGetProgramInfoLog(program, 512, nullptr, info_log);
-        LOG_ERRORF("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}", info_log);
+        NX_LOG_ERRORF("ERROR::SHADER::PROGRAM::LINK_FAILED\n{}", info_log);
     }
     else
     {
-        LOG_INFOF("Shader program ({}) linked successfully", program);
+        NX_LOG_INFOF("Shader program ({}) linked successfully", program);
     }
 }

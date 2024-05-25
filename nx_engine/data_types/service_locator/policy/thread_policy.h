@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <mutex>
 
-namespace service::policy
+namespace nx::service::policy
 {
     class thread_safe
     {
