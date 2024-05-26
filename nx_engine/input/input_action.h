@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <string>
 #include "input.h"
 #include "input_binding.h"
 #include "../event/event_system.h"
@@ -10,7 +9,7 @@ namespace nx::input
     class input_action
     {
     public:
-        input_action(input_binding* const device, std::string name) :
+        input_action(input_binding* const device, const std::string& name) :
             events(std::make_unique<event::event_system>()),
             binding_(device),
             state_(key_state::none),

@@ -1,9 +1,7 @@
 #pragma once
-#include <cassert>
-#include <memory>
 #include <typeindex>
-#include <unordered_map>
 
+#include "base/nx_pch.h"
 #include "detail/has_on_create.h"
 #include "policy/thread_policy.h"
 

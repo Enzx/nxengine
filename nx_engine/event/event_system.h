@@ -1,11 +1,10 @@
 ﻿#pragma once
-#include <map>
 #include <memory>
 #include <typeindex>
-#include <vector>
-#include <any>
+
 
 #include "handler.h"
+#include "base/nx_pch.h"
 
 namespace nx::event
 {
@@ -80,6 +79,6 @@ namespace nx::event
         }
 
     private:
-        std::map<std::type_index, std::vector<std::unique_ptr<handler_base>>> handlers_;
+        std::unordered_map<std::type_index, std::vector<std::unique_ptr<handler_base>>> handlers_;
     };
 }

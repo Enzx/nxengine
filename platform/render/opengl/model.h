@@ -12,8 +12,10 @@ class model
 public:
     explicit model(const std::string& path);
     void draw(opengl_shader& shader) const;
-private:
+    nx::ref<nx::render::vertex_array>& get_vertex_array() const;
     std::vector<opengl_mesh> meshes_;
+
+private:
     std::filesystem::path directory_;
     std::vector<texture> textures_loaded_;
     void load_model(const std::string& path);

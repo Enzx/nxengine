@@ -6,23 +6,14 @@
 
 #include "camera.h"
 #include "model.h"
+#include "opengl_render_api.h"
+#include "opengl_render_command.h"
 #include "glad/glad.h"
 #include "input/input_action.h"
 #include "data_types/service_locator/locator.h"
 
 
-inline void APIENTRY opengl_message_callback(GLenum source,
-                                             GLenum type,
-                                             GLuint id,
-                                             GLenum severity,
-                                             GLsizei length,
-                                             const GLchar* message,
-                                             const void* userParam)
-{
-    fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-            type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "",
-            type, severity, message);
-}
+
 
 class opengl_render_system final : public render::render_system
 {
@@ -48,4 +39,6 @@ private:
     std::shared_ptr<nx::input::input_action> rotate_left_;
 
     model* our_model;
+    opengl_render_api api_{};
+    opengl_render_command command_{};
 };

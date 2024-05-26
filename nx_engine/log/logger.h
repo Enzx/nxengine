@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include <iostream>
 #include <chrono>
 #include <source_location>
-#include <string>
+
+#include "base/nx_pch.h"
 
 namespace nx::logs
 {

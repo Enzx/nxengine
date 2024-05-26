@@ -22,34 +22,12 @@ namespace service::policy
 void opengl_render_system::on_create(nx::service::locator<>* locator)
 {
     NX_LOG_DEBUGF("opengl_render_system::on_create");
-    // right_input_ = std::make_shared<
-    //     input::input_action>(input::device_type::keyboard, input::key_code::d, "Move_Right");
-    // left_input_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::a, "Move_Left");
-    // rotate_right_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::e,
-    //                                                       "Rotate_Right");
-    // rotate_left_ = std::make_shared<input::input_action>(input::device_type::keyboard, input::key_code::q,
-    //                                                      "Rotate_Left");
-    // const auto input_system = locator->get<platform::input::glfw_input>();
-    // input_system->add_input_action(right_input_);
-    // input_system->add_input_action(left_input_);
-    // input_system->add_input_action(rotate_right_);
-    // input_system->add_input_action(rotate_left_);
-    
+    api_.init();
+    command_.set_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
+
     NX_LOG_TRACE("opengl_render_system::on_create");
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        NX_LOG_ERROR("Failed to initialize GLAD");
-        return;
-    }
-    // During init, enable debug output
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(opengl_message_callback, nullptr);
 
-    glEnable(GL_DEPTH_TEST);
-
-    glViewport(0, 0, 640, 480);
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     //  mesh_ = new opengl_mesh();
 
 
@@ -63,10 +41,10 @@ void opengl_render_system::on_create(nx::service::locator<>* locator)
     NX_LOG_TRACE("Compile Shader Program");
     our_shader_.compile(vertex_shader_path.c_str(), fragment_shader_path.c_str());
     NX_LOG_TRACE("Loading Model");
-    our_model = new model((assets_path / "models" / "backpack.obj").string().c_str());
+    our_model = new model((assets_path / "models" / "backpack.obj").string());
 
     // camera
- 
+
 
     // draw wireframe
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -74,8 +52,7 @@ void opengl_render_system::on_create(nx::service::locator<>* locator)
 
 void opengl_render_system::update()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    command_.clear();
     our_shader_.use();
     GL_CHECK_ERROR();
 
@@ -92,7 +69,12 @@ void opengl_render_system::update()
     our_shader_.set_mat4("model", model);
     GL_CHECK_ERROR();
 
-    our_model->draw(our_shader_);
+    // our_model->draw(our_shader_);
+    for (const auto& mesh : our_model->meshes_)
+    {
+        command_.draw_indexed(mesh.vertex_array_, 0);
+    }
+
     // if(right_input_->get_state() == input::key_state::press)
     // {
     //      camera_.ProcessKeyboard(Camera_Movement::RIGHT, 0.1f);
@@ -112,6 +94,7 @@ void opengl_render_system::update()
 
 opengl_render_system::opengl_render_system()
 {
+    our_model = nullptr;
 }
 
 opengl_render_system::~opengl_render_system()

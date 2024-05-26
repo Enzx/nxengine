@@ -21,6 +21,12 @@ void model::draw(opengl_shader& shader) const
     }
 }
 
+nx::ref<nx::render::vertex_array>& model::get_vertex_array() const
+{
+    nx::ref<nx::render::vertex_array> vertex_array = meshes_[0].vertex_array_;
+    return vertex_array;
+}
+
 void model::load_model(const std::string& path)
 {
     NX_LOG_DEBUGF("Load_model: {}", path);

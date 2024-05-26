@@ -32,14 +32,14 @@ void opengl_mesh::setup_mesh()
                                                              vertices.size() * sizeof(vertex));
     index_buffer_ = std::make_shared<opengl::index_buffer>(&indices[0], indices.size());
 
-    render::buffer_layout layout = {
-        {render::buffer_data_type::float3, "aPos"},
-        {render::buffer_data_type::float3, "aNormal"},
-        {render::buffer_data_type::float2, "aTexCoords"},
-        {render::buffer_data_type::float3, "aTangent"},
-        {render::buffer_data_type::float3, "aBitangent"},
-        {render::buffer_data_type::int4, "bone_ids"},
-        {render::buffer_data_type::int4, "weights"}
+    nx::render::buffer_layout layout = {
+        {nx::render::buffer_data_type::float3, "aPos"},
+        {nx::render::buffer_data_type::float3, "aNormal"},
+        {nx::render::buffer_data_type::float2, "aTexCoords"},
+        {nx::render::buffer_data_type::float3, "aTangent"},
+        {nx::render::buffer_data_type::float3, "aBitangent"},
+        {nx::render::buffer_data_type::int4, "bone_ids"},
+        {nx::render::buffer_data_type::int4, "weights"}
     };
 
     vertex_buffer_->set_layout(layout);

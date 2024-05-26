@@ -12,26 +12,16 @@ enum class render_backend
 class render_api
 {
 public:
-    [[nodiscard]] render_backend get_api() const
-    {
-        return api_;
-    }
-
-    void set_api(const render_backend backend)
-    {
-        api_ = backend;
-    }
-
-    void init()
-    {
-        api_ = render_backend::opengl;
-    }
-    void shutdown()
-    {
-        api_ = render_backend::none;
-    }
+    render_api() = default;
+    render_api(const render_api& other) = delete;
+    render_api(render_api&& other) noexcept = delete;
+    render_api& operator=(const render_api& other) = delete;
+    render_api& operator=(render_api&& other) noexcept = delete;
     
+    virtual ~render_api() = default;
+    [[nodiscard]] virtual  render_backend get_api() const = 0;
+
+    virtual void init() = 0; 
+    virtual void shutdown() = 0;
     
-private:
-    render_backend api_ = render_backend::none;
 };

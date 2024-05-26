@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include <string>
-#include <vector>
+#include "base/nx_pch.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
@@ -45,8 +44,10 @@ public:
     void unbind() const;
     void draw(opengl_shader& shader) const;
 
+    nx::ref<opengl::opengl_vertex_array> vertex_array_;
+
+
 private:
-std::shared_ptr<opengl::opengl_vertex_array> vertex_array_;
     std::shared_ptr<opengl::vertex_buffer> vertex_buffer_;
     std::shared_ptr<opengl::index_buffer> index_buffer_;
     void setup_mesh();

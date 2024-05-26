@@ -23,12 +23,12 @@ void opengl::vertex_buffer::unbind() const
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void opengl::vertex_buffer::set_layout(const render::buffer_layout& layout)
+void opengl::vertex_buffer::set_layout(const nx::render::buffer_layout& layout)
 {
      layout_ = layout;
 }
 
-const render::buffer_layout& opengl::vertex_buffer::get_layout() const
+const nx::render::buffer_layout& opengl::vertex_buffer::get_layout() const
 {
     return layout_;
 }
@@ -59,12 +59,12 @@ void opengl::index_buffer::unbind() const
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void opengl::index_buffer::set_layout(const render::buffer_layout& layout)
+void opengl::index_buffer::set_layout(const nx::render::buffer_layout& layout)
 {
     layout_ = layout;
 }
 
-const render::buffer_layout& opengl::index_buffer::get_layout() const
+const nx::render::buffer_layout& opengl::index_buffer::get_layout() const
 {
     return layout_;
 }

@@ -1,25 +1,25 @@
 ﻿#include "opengl_vertex_array.h"
 #include "glad/glad.h"
 
-GLenum shader_data_type_to_opengl(render::buffer_data_type type)
+GLenum shader_data_type_to_opengl(nx::render::buffer_data_type type)
 {
     switch (type)
     {
-    case render::buffer_data_type::float1: return GL_FLOAT;
-    case render::buffer_data_type::float2: return GL_FLOAT;
-    case render::buffer_data_type::float3: return GL_FLOAT;
-    case render::buffer_data_type::float4: return GL_FLOAT;
-    case render::buffer_data_type::mat3: return GL_FLOAT;
-    case render::buffer_data_type::mat4: return GL_FLOAT;
-    case render::buffer_data_type::int1: return GL_INT;
-    case render::buffer_data_type::int2: return GL_INT;
-    case render::buffer_data_type::int3: return GL_INT;
-    case render::buffer_data_type::int4: return GL_INT;
-    case render::buffer_data_type::bool1: return GL_BOOL;
-    case render::buffer_data_type::bool2: return GL_BOOL;
-    case render::buffer_data_type::bool3: return GL_BOOL;
-    case render::buffer_data_type::bool4: return GL_BOOL;
-    case render::buffer_data_type::none: NX_LOG_ERROR("NONE buffer data type: none");
+    case nx::render::buffer_data_type::float1: return GL_FLOAT;
+    case nx::render::buffer_data_type::float2: return GL_FLOAT;
+    case nx::render::buffer_data_type::float3: return GL_FLOAT;
+    case nx::render::buffer_data_type::float4: return GL_FLOAT;
+    case nx::render::buffer_data_type::mat3: return GL_FLOAT;
+    case nx::render::buffer_data_type::mat4: return GL_FLOAT;
+    case nx::render::buffer_data_type::int1: return GL_INT;
+    case nx::render::buffer_data_type::int2: return GL_INT;
+    case nx::render::buffer_data_type::int3: return GL_INT;
+    case nx::render::buffer_data_type::int4: return GL_INT;
+    case nx::render::buffer_data_type::bool1: return GL_BOOL;
+    case nx::render::buffer_data_type::bool2: return GL_BOOL;
+    case nx::render::buffer_data_type::bool3: return GL_BOOL;
+    case nx::render::buffer_data_type::bool4: return GL_BOOL;
+    case nx::render::buffer_data_type::none: NX_LOG_ERROR("NONE buffer data type: none");
     
     }
     return GL_FLOAT;
@@ -45,7 +45,7 @@ void opengl::opengl_vertex_array::unbind() const
     glBindVertexArray(0);
 }
 
-void opengl::opengl_vertex_array::add_vertex_buffer(const std::shared_ptr<render::vertex_buffer>& vertex_buffer)
+void opengl::opengl_vertex_array::add_vertex_buffer(const std::shared_ptr<nx::render::vertex_buffer>& vertex_buffer)
 {
     bind();
     vertex_buffer->bind();
@@ -66,7 +66,7 @@ void opengl::opengl_vertex_array::add_vertex_buffer(const std::shared_ptr<render
     vertex_buffers_.push_back(vertex_buffer);
 }
 
-void opengl::opengl_vertex_array::set_index_buffer(const std::shared_ptr<render::index_buffer>& index_buffer)
+void opengl::opengl_vertex_array::set_index_buffer(const std::shared_ptr<nx::render::index_buffer>& index_buffer)
 {
     bind();
     index_buffer->bind();

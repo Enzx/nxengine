@@ -3,22 +3,22 @@
 
 namespace opengl
 {
-    class vertex_buffer : public render::vertex_buffer
+    class vertex_buffer : public nx::render::vertex_buffer
     {
     public:
         vertex_buffer(float* vertices, uint32_t size);
         ~vertex_buffer() override;
         void bind() const override;
         void unbind() const override;
-        void set_layout(const render::buffer_layout& layout) override;
-        const render::buffer_layout& get_layout() const override;
+        void set_layout(const nx::render::buffer_layout& layout) override;
+        const nx::render::buffer_layout& get_layout() const override;
 
     private:
         uint32_t id_{};
-        render::buffer_layout layout_{};
+        nx::render::buffer_layout layout_{};
     };
 
-    class index_buffer : public render::index_buffer
+    class index_buffer : public nx::render::index_buffer
     {
     public:
         index_buffer(uint32_t* indices, uint32_t count);
@@ -26,12 +26,12 @@ namespace opengl
         void bind() const override;
         void unbind() const override;
         [[nodiscard]] uint32_t get_count() const override { return count_; }
-        void set_layout(const render::buffer_layout& layout) override;
-        [[nodiscard]] const render::buffer_layout& get_layout() const override;
+        void set_layout(const nx::render::buffer_layout& layout) override;
+        [[nodiscard]] const nx::render::buffer_layout& get_layout() const override;
 
     private:
         uint32_t id_{};
         uint32_t count_{};
-        render::buffer_layout layout_{};
+        nx::render::buffer_layout layout_{};
     };
 }

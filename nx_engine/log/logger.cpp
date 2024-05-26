@@ -43,14 +43,13 @@ std::string nx::logs::logger::get_log_level_text(const log_level& level)
 
 std::string nx::logs::logger::get_log_level_color(const log_level& level)
 {
-
     switch (level)
     {
     case log_level::trace:
         return "\033[37m"; //white
     case log_level::debug:
         return "\033[36m"; //cyan
-    case log_level::info:  
+    case log_level::info:
         return "\033[32m"; //green
     case log_level::warning:
         return "\033[33m"; //yellow
@@ -62,11 +61,17 @@ std::string nx::logs::logger::get_log_level_color(const log_level& level)
     return "\033[0m"; //default color
 }
 
-void nx::logs::logger::log_message(const log_level& level, const std::string& message, const std::source_location& location)
+void nx::logs::logger::log_message(const log_level& level, const std::string& message,
+                                   const std::source_location& location)
 {
     if (level < log_level_threshold) return;
     const auto level_text = get_log_level_text(level);
     static const std::string default_color = "\033[0m";
+    static const std::string grey = "\033[90m";
+    static const std::string bold = "\033[1m";
+    static const std::string strong_white = "\033[97m";
+    
+    
     //set color based on log level
     std::string color = get_log_level_color(level);
     //Extract file name from path
@@ -79,7 +84,8 @@ void nx::logs::logger::log_message(const log_level& level, const std::string& me
 
     std::ostringstream oss;
     oss << "[" << get_current_time() << "]"
-        << "[" << color << level_text << default_color << "]"
-        << " [" << file_name << ":" << location.line() << "]: " << message;
-    std::cout << oss.str() << '\n';
+        << "[" << color << bold << level_text << default_color << "]"
+        << " [" << grey << file_name << ":" << location.line() << "]: "
+        << strong_white << message << default_color << '\n';
+    std::cout << oss.str();
 }

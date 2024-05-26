@@ -1,11 +1,16 @@
 ﻿#pragma once
 #include "buffers.h"
 
-namespace render
+namespace nx::render
 {
     class vertex_array
     {
     public:
+        vertex_array(const vertex_array& other) = delete;
+        vertex_array(vertex_array&& other) noexcept = delete;
+        vertex_array& operator=(const vertex_array& other) = delete;
+        vertex_array& operator=(vertex_array&& other) noexcept = delete;
+
         vertex_array() = default;
         virtual ~vertex_array() = default;
         virtual void bind() const = 0;

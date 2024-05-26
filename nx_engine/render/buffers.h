@@ -1,9 +1,8 @@
 ﻿#pragma once
-#include <memory>
 
 #include "log/logger.h"
 
-namespace render
+namespace nx::render
 {
     enum class buffer_data_type
     {
