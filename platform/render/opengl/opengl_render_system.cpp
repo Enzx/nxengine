@@ -12,6 +12,8 @@
 #include "opengl_shader.h"
 #include "log/logger.h"
 #include "GLFW/glfw3.h"
+#include "render/camera.h"
+#include "window/glfw_window_system.h"
 
 
 namespace service::policy
@@ -22,12 +24,19 @@ namespace service::policy
 void opengl_render_system::on_create(nx::service::locator<>* locator)
 {
     NX_LOG_DEBUGF("opengl_render_system::on_create");
+    const auto window_service = locator->get<window::glfw_window_system>();
+    window_ = window_service->get_current_window();
+    window_->events->subscribe<window::events::resize>(&opengl_render_system::on_window_resize, this);
     api_.init();
+
     command_.set_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
 
     NX_LOG_TRACE("opengl_render_system::on_create");
-
-
+    camera_ = nx::render::camera();
+    camera_.update_projection_matrix(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
+    camera_.set_position(glm::vec3(10.0f, 0.0f, 10.0f));
+    camera_.look_at(glm::vec3(0.0f, 0.0f, 0.0f));
+     
     //  mesh_ = new opengl_mesh();
 
 
@@ -50,14 +59,21 @@ void opengl_render_system::on_create(nx::service::locator<>* locator)
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
+void opengl_render_system::on_window_resize(const window::events::resize& event)
+{
+    camera_.update_projection_matrix(45.0f, event.width /event.height, 0.1f, 100.0f);
+
+    command_.set_viewport(0, 0, event.width, event.height);
+}
+
 void opengl_render_system::update()
 {
     command_.clear();
     our_shader_.use();
     GL_CHECK_ERROR();
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera_.Zoom), 640.0f / 480.f, 0.1f, 100.0f);
-    glm::mat4 view = camera_.GetViewMatrix();
+    const glm::mat4 projection =  camera_. get_projection_matrix();
+    const glm::mat4 view = camera_.get_view_matrix();
 
     our_shader_.set_mat4("projection", projection);
     our_shader_.set_mat4("view", view);

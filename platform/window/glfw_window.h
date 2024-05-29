@@ -1,10 +1,10 @@
 ﻿#pragma once
-#include "window/interface_window.h"
+#include "window/window_interface.h"
 #include "GLFW/glfw3.h"
 
 namespace window
 {
-	class glfw_window final : public interface_window
+	class glfw_window final : public window_interface
 	{
 	public:
 		glfw_window() = default;

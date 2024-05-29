@@ -4,15 +4,14 @@
 #include "render/render_system.h"
 #include <glm/vec3.hpp>
 
-#include "camera.h"
+#include "render/camera.h"
 #include "model.h"
 #include "opengl_render_api.h"
 #include "opengl_render_command.h"
-#include "glad/glad.h"
 #include "input/input_action.h"
 #include "data_types/service_locator/locator.h"
-
-
+#include "window/glfw_window.h"
+#include "window/window_events.h"
 
 
 class opengl_render_system final : public render::render_system
@@ -30,9 +29,11 @@ public:
     void on_create(nx::service::locator<>* locator);
 
 private:
-    opengl_shader our_shader_{};
+    void on_window_resize(const window::events::resize& event);
 
-    Camera camera_{glm::vec3(0.0f, 0.0f, 3.0f)};
+    opengl_shader our_shader_{};
+    
+    nx::render::camera camera_{};
     std::shared_ptr<nx::input::input_action> right_input_;
     std::shared_ptr<nx::input::input_action> left_input_;
     std::shared_ptr<nx::input::input_action> rotate_right_;
@@ -41,4 +42,5 @@ private:
     model* our_model;
     opengl_render_api api_{};
     opengl_render_command command_{};
+    nx::ref<window_interface> window_{};
 };

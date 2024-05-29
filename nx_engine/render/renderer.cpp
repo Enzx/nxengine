@@ -8,9 +8,9 @@ void renderer::shutdown() const
 {
 }
 
-void renderer::begin_scene(const camera& camera) const
+void renderer::begin_scene(const nx::render::camera& camera) const
 {
-    scene_data_->view_projection_matrix = camera.get_projection_matrix();
+    scene_data_->view_projection_matrix = camera.get_view_projection_matrix();
 }
 
 void renderer::end_scene()

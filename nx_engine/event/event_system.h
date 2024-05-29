@@ -14,9 +14,14 @@ namespace nx::event
     {
     public:
         template <typename TMessage, typename TAgent>
-        void subscribe(void (TAgent::*function)(const TMessage&), TAgent* instance)
+        using message_callback = void(TAgent::*)(const TMessage&);
+        template <typename TMessage, typename TAgent>
+                using message_callback_const = void(TAgent::*)(const TMessage&) const;
+        
+        template <typename TMessage, typename TAgent>
+        void subscribe(message_callback<TMessage, TAgent> callback_func, TAgent* instance)
         {
-            const auto wrapper = new class member_function_wrapper<TAgent, TMessage>(function, instance);
+            const auto wrapper = new class member_function_wrapper<TAgent, TMessage>(callback_func, instance);
             handlers_[std::type_index(typeid(TMessage))].push_back(std::unique_ptr<handler_base>(wrapper));
         }
 
@@ -30,9 +35,9 @@ namespace nx::event
 
         //add overload to subscribe const functions
         template <typename TMessage, typename TAgent>
-        void subscribe(void (TAgent::*function)(const TMessage&) const, TAgent* instance)
+        void subscribe(message_callback_const<TMessage, TAgent> callback_func_const, TAgent* instance)
         {
-            const auto wrapper = new class member_function_wrapper<TAgent, TMessage>(function, instance);
+            const auto wrapper = new class member_function_wrapper<TAgent, TMessage>(callback_func_const, instance);
             handlers_[std::type_index(typeid(TMessage))].push_back(std::unique_ptr<handler_base>(wrapper));
         }
 

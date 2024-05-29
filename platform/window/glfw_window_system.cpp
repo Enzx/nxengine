@@ -47,9 +47,9 @@ void window::glfw_window_system::on_window_close(const events::close& event) con
     events->publish(event);
 }
 
-std::shared_ptr<interface_window> window::glfw_window_system::create_window(int width, int height, std::string&& title)
+std::shared_ptr<window_interface> window::glfw_window_system::create_window(int width, int height, std::string&& title)
 {
-    std::shared_ptr<interface_window> window = std::make_shared<glfw_window>(width, height, title);
+    std::shared_ptr<window_interface> window = std::make_shared<glfw_window>(width, height, title);
     window->events->subscribe<events::close>(&glfw_window_system::on_window_close, this);
 
 
@@ -57,7 +57,7 @@ std::shared_ptr<interface_window> window::glfw_window_system::create_window(int 
     return window;
 }
 
-void window::glfw_window_system::destroy_window(const std::shared_ptr<interface_window> window)
+void window::glfw_window_system::destroy_window(const std::shared_ptr<window_interface> window)
 {
     const auto win = static_cast<GLFWwindow*>(window->get_raw_pointer());
     const auto it = std::ranges::find(windows_, window);
@@ -65,7 +65,7 @@ void window::glfw_window_system::destroy_window(const std::shared_ptr<interface_
     glfwDestroyWindow(win);
 }
 
-void window::glfw_window_system::set_current_window(const std::shared_ptr<interface_window>& window)
+void window::glfw_window_system::set_current_window(const std::shared_ptr<window_interface>& window)
 {
     window_system::set_current_window(window);
     glfwMakeContextCurrent(static_cast<GLFWwindow*>(window->get_raw_pointer()));

@@ -1,22 +1,20 @@
 #define GLFW_INCLUDE_NONE
 #include <csignal>
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 
 #include "imgui.h"
 #include "event/event_system.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "window/glfw_window_system.h"
-#include "window/interface_window.h"
-#include "window/window_events.h"
-
-
 #include "input/glfw_input_system.h"
 #include "input/glfw_keyboard_binding.h"
 #include "render/opengl/opengl_render_system.h"
+#include "window/glfw_window_system.h"
+#include "window/window_interface.h"
+#include "window/window_events.h"
 
-std::shared_ptr<interface_window> main_window;
+std::shared_ptr<window_interface> main_window;
 bool running = true;
 
 void on_window_close(const window::events::close& event)

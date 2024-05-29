@@ -12,7 +12,7 @@ class renderer
 public:
     void init() const;
     void shutdown() const;
-    void begin_scene(const camera& camera) const;
+    void begin_scene(const nx::render::camera& camera) const;
     void end_scene();
     void submit(const nx::ref<shader>& shader,
                 const nx::ref<nx::render::vertex_array>& vertex_array,

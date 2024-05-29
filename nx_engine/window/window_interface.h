@@ -4,16 +4,16 @@
 
 #include "event/event_system.h"
 
-class interface_window
+class window_interface
 {
 public:
-    interface_window() = default;
-    interface_window(const interface_window& other) = delete;
-    interface_window(interface_window&& other) noexcept = delete;
-    interface_window& operator=(const interface_window& other) = delete;
-    interface_window& operator=(interface_window&& other) noexcept = delete;
+    window_interface() = default;
+    window_interface(const window_interface& other) = delete;
+    window_interface(window_interface&& other) noexcept = delete;
+    window_interface& operator=(const window_interface& other) = delete;
+    window_interface& operator=(window_interface&& other) noexcept = delete;
 
-    interface_window(const int width, const int height, std::string& title) : width_(width), height_(height),
+    window_interface(const int width, const int height, std::string& title) : width_(width), height_(height),
                                                                               title_(std::move(title))
     {
         events = std::make_unique<nx::event::event_system>();
@@ -25,7 +25,7 @@ public:
         return window_id_;
     }
 
-    virtual ~interface_window() = default;
+    virtual ~window_interface() = default;
     virtual void show() = 0;
     virtual void hide() = 0;
     virtual void close() = 0;

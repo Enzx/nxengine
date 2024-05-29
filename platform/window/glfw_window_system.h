@@ -22,13 +22,13 @@ namespace window
         void terminate() override;
         void update() override;
         void on_window_close(const events::close& event) const;
-        std::shared_ptr<interface_window> create_window(int width, int height, std::string&& title) override;
-        void destroy_window(std::shared_ptr<interface_window>) override;
-        void set_current_window(const std::shared_ptr<interface_window>& window) override;
+        std::shared_ptr<window_interface> create_window(int width, int height, std::string&& title) override;
+        void destroy_window(std::shared_ptr<window_interface>) override;
+        void set_current_window(const std::shared_ptr<window_interface>& window) override;
 
 
     private:
-        std::vector<std::shared_ptr<interface_window>> windows_;
+        std::vector<std::shared_ptr<window_interface>> windows_;
         static void on_glfw_error(int error, const char* description);
 
     };

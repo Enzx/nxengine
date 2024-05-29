@@ -4,7 +4,7 @@
 
 #include "window/window_events.h"
 
-window::glfw_window::glfw_window(const int width, const int height, std::string& title) : interface_window(
+window::glfw_window::glfw_window(const int width, const int height, std::string& title) : window_interface(
     width, height, title)
 {
     window_ = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
