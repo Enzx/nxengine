@@ -9,10 +9,6 @@
 
 #include "log/logger.h"
 
-opengl_shader::opengl_shader(const wchar_t* vertex_shader_path, const wchar_t* fragment_shader_path)
-{
-    compile(vertex_shader_path, fragment_shader_path);
-}
 
 opengl_shader::~opengl_shader()
 {
@@ -20,7 +16,7 @@ opengl_shader::~opengl_shader()
     glDeleteProgram(id);
 }
 
-void opengl_shader::compile(const wchar_t* vertex_shader_source, const wchar_t* fragment_shader_source)
+void opengl_shader::compile(const  std::string& vertex_shader_source, const std::string& fragment_shader_source)
 {
     std::string vertex_shader_code;
     std::string fragment_shader_code;
@@ -72,45 +68,47 @@ void opengl_shader::compile(const wchar_t* vertex_shader_source, const wchar_t* 
     glDeleteShader(fragment_shader);
 }
 
-void opengl_shader::use() const
+void opengl_shader::bind() const
 {
     glUseProgram(id);
 }
 
-void opengl_shader::set_bool(const char* name, const bool value) const
+void opengl_shader::unbind() const
 {
-    glUniform1i(glGetUniformLocation(id, name), static_cast<int>(value));
+    glUseProgram(0);
 }
 
-void opengl_shader::set_int(const char* name, const int value) const
+void opengl_shader::set_bool(const std::string& name, const bool value) const
 {
-    glUniform1i(glGetUniformLocation(id, name), value);
-    GLenum error = glGetError();
-    if (error == GL_INVALID_OPERATION)
-    {
-        NX_LOG_ERRORF("OpenGL Error: {}", error);
-    }
+    glUniform1i(glGetUniformLocation(id, name.c_str()), static_cast<int>(value));
 }
 
-void opengl_shader::set_float(const char* name, const float value) const
+void opengl_shader::set_int(const std::string& name, const int value) const
 {
-    glUniform1f(glGetUniformLocation(id, name), value);
+    glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+
 }
 
-void opengl_shader::set_float3(const char* name, float v0, float v1, float v2) const
+void opengl_shader::set_float(const std::string& name, const float value) const
 {
-    glUniform3f(glGetUniformLocation(id, name), v0, v1, v2);
+    glUniform1f(glGetUniformLocation(id, name.c_str()), value);
 }
 
-void opengl_shader::set_float4(const char* name, float v0, float v1, float v2, float v3) const
+void opengl_shader::set_float3(const std::string& name, const float v0, const float v1, const float v2) const
 {
-    glUniform4f(glGetUniformLocation(id, name), v0, v1, v2, v3);
+    glUniform3f(glGetUniformLocation(id, name.c_str()), v0, v1, v2);
 }
 
-void opengl_shader::set_mat4(const char* name, glm::mat4 mat) const
+void opengl_shader::set_float4(const std::string& name, const float v0, const float v1, const float v2, const float v3) const
 {
-    glUniformMatrix4fv(glGetUniformLocation(id, name), 1, GL_FALSE, &mat[0][0]);
+    glUniform4f(glGetUniformLocation(id, name.c_str()), v0, v1, v2, v3);
 }
+
+void opengl_shader::set_mat4(const std::string& name, glm::mat4 mat) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
 
 void opengl_shader::check_compile_status(const unsigned int shader, const char* type)
 {

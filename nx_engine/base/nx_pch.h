@@ -13,4 +13,5 @@
 
 #include "base/base.h"
 #include "log/logger.h"
+#include "data_types/service_locator/locator.h"
 

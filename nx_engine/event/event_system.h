@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include <memory>
 #include <typeindex>
-
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
 
 #include "handler.h"
 #include "base/nx_pch.h"
@@ -16,32 +18,29 @@ namespace nx::event
         template <typename TMessage, typename TAgent>
         using message_callback = void(TAgent::*)(const TMessage&);
         template <typename TMessage, typename TAgent>
-                using message_callback_const = void(TAgent::*)(const TMessage&) const;
-        
+        using message_callback_const = void(TAgent::*)(const TMessage&) const;
+
         template <typename TMessage, typename TAgent>
         void subscribe(message_callback<TMessage, TAgent> callback_func, TAgent* instance)
         {
-            const auto wrapper = new class member_function_wrapper<TAgent, TMessage>(callback_func, instance);
+            const auto wrapper = new member_function_wrapper<TAgent, TMessage>(callback_func, instance);
             handlers_[std::type_index(typeid(TMessage))].push_back(std::unique_ptr<handler_base>(wrapper));
         }
 
-        //subscribe static functions
         template <typename TMessage>
-        void subscribe(void (*function)(const TMessage&))
+        void subscribe(void (*callback)(const TMessage&))
         {
-            auto wrapper = new class static_function_wrapper<TMessage>(function);
+            auto wrapper = new static_function_wrapper<TMessage>(callback);
             handlers_[std::type_index(typeid(TMessage))].push_back(std::unique_ptr<handler_base>(wrapper));
         }
 
-        //add overload to subscribe const functions
         template <typename TMessage, typename TAgent>
         void subscribe(message_callback_const<TMessage, TAgent> callback_func_const, TAgent* instance)
         {
-            const auto wrapper = new class member_function_wrapper<TAgent, TMessage>(callback_func_const, instance);
+            const auto wrapper = new member_function_wrapper<TAgent, TMessage>(callback_func_const, instance);
             handlers_[std::type_index(typeid(TMessage))].push_back(std::unique_ptr<handler_base>(wrapper));
         }
 
-        //unsubscribe all
         template <typename TMessage>
         void unsubscribe_all()
         {
@@ -53,7 +52,7 @@ namespace nx::event
         }
 
         template <typename TMessage, typename TAgent>
-        void unsubscribe(void (TAgent::*function)(const TMessage&), const TAgent* instance)
+        void unsubscribe(message_callback<TMessage, TAgent> callback, const TAgent* instance)
         {
             auto& handlers = handlers_[std::type_index(typeid(TMessage))];
             const auto it = std::find_if(
@@ -62,7 +61,43 @@ namespace nx::event
                 {
                     auto wrapper = static_cast<member_function_wrapper<TAgent, TMessage>*>
                         (handler.get());
-                    return wrapper->equals(function, instance);
+                    return wrapper->equals(callback, instance);
+                });
+            if (it != handlers.end())
+            {
+                handlers.erase(it);
+            }
+        }
+
+        template <typename TMessage, typename TAgent>
+        void unsubscribe(message_callback_const<TMessage, TAgent> callback_func_const, TAgent* instance)
+        {
+            auto& handlers = handlers_[std::type_index(typeid(TMessage))];
+            const auto it = std::find_if(
+                handlers.begin(), handlers.end(),
+                [&](const std::unique_ptr<handler_base>& handler)
+                {
+                    auto wrapper = static_cast<member_function_wrapper<TAgent, TMessage>*>
+                        (handler.get());
+                    return wrapper->equals(callback_func_const, instance);
+                });
+            if (it != handlers.end())
+            {
+                handlers.erase(it);
+            }
+        }
+
+        template <typename TMessage, typename TAgent>
+        void unsubscribe(message_callback_const<TMessage, TAgent> callback_func_const, const TAgent* instance)
+        {
+            auto& handlers = handlers_[std::type_index(typeid(TMessage))];
+            const auto it = std::find_if(
+                handlers.begin(), handlers.end(),
+                [&](const std::unique_ptr<handler_base>& handler)
+                {
+                    auto wrapper = static_cast<member_function_wrapper<TAgent, TMessage>*>
+                        (handler.get());
+                    return wrapper->equals(callback_func_const, instance);
                 });
             if (it != handlers.end())
             {

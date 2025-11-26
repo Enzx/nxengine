@@ -4,12 +4,12 @@
 #include "glad/glad.h"
 #include "render/render_api.h"
 
-class opengl_render_api final : public render_api
+class opengl_render_api final : public nx::render::render_api
 {
 public:
     opengl_render_api() = default;
     ~opengl_render_api() override;
-    [[nodiscard]] render_backend get_api() const override;
+    [[nodiscard]] nx::render::render_backend get_api() const override;
     void init() override;
     void shutdown() override;
 
@@ -22,7 +22,11 @@ public:
                                                  const void* userParam)
     {
         int _ = fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-                type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "",
-                type, severity, message);
+                        type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "",
+                        type, severity, message);
     }
+
+    nx::ref<nx::render::render_command> create_render_command() override;
+    nx::ref<nx::render::shader>
+    create_shader() override;
 };

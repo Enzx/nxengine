@@ -29,10 +29,10 @@ public:
     void on_create(nx::service::locator<>* locator);
 
 private:
-    void on_window_resize(const window::events::resize& event);
+    void on_window_resize(const window::events::resize& event) override;
 
     opengl_shader our_shader_{};
-    
+
     nx::render::camera camera_{};
     std::shared_ptr<nx::input::input_action> right_input_;
     std::shared_ptr<nx::input::input_action> left_input_;

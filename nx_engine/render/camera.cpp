@@ -56,7 +56,7 @@ namespace nx
 
         void camera::update_view_matrix()
         {
-            view_matrix_ = glm::lookAt(position_, position_ + forward_, up_);
+            view_matrix_ = lookAt(position_, position_ + forward_, up_);
 
             view_projection_matrix_ = view_matrix_ * projection_matrix_;
         }
@@ -75,5 +75,5 @@ namespace nx
             far_clip_ = far_clip;
             update_projection_matrix();
         }
-    } // namespace render
-} // namespace nx
+    } 
+} 

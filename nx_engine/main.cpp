@@ -24,10 +24,7 @@ void on_window_close(const window::events::close& event)
     running = false;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}
+
 
 void handle_signal(int signal)
 {
@@ -46,15 +43,14 @@ int main()
     }
 
     nx::service::locator<> services;
-    const auto window_system = services.add<window::glfw_window_system>();
+    const auto window_system = services.add<window::window_system, window::glfw_window_system>();
     main_window = window_system->create_window(640, 480, "Hello World");
     window_system->set_current_window(main_window);
     main_window->events->subscribe<window::events::close>(&on_window_close);
     const auto input_system = services.add<glfw_input_system>();
-    const auto renderer = services.add<opengl_render_system>();
+    const auto renderer = services.add<render::render_system>();
 
 
-    glfwSetFramebufferSizeCallback(static_cast<GLFWwindow*>(main_window->get_raw_pointer()), framebuffer_size_callback);
 
     const auto close_input_action =
         std::make_shared<nx::input::input_action>(new glfw_keyboard_binding(nx::input::key_code::escape),"close");

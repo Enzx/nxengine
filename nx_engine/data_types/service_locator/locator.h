@@ -7,8 +7,6 @@
 
 namespace nx::service
 {
-  
-
     /**
      * \brief Service locator class to register and retrieve services by type name
      * \details This class is a singleton and is used to register and retrieve services by type name
@@ -42,6 +40,25 @@ namespace nx::service
             services_[type] = std::move(service);
             this->unlock();
             return std::static_pointer_cast<type_name>(services_[type]);
+        }
+
+        template <typename interface_name, typename type_name, typename... Args>
+        std::shared_ptr<interface_name> add(Args&&... instance)
+        {
+            //make sure the type_name is derived from interface_name
+            static_assert(std::is_base_of_v<interface_name, type_name>,
+                          "type_name must be derived from interface_name");
+
+            const auto service = std::make_shared<type_name>(std::forward<Args>(instance)...);
+            if constexpr (detail::has_on_create<type_name, void(locator<>*)>::value)
+            {
+                service->on_create(this);
+            }
+            const auto type = std::type_index(typeid(interface_name));
+            this->lock();
+            services_[type] = std::move(service);
+            this->unlock();
+            return std::static_pointer_cast<interface_name>(services_[type]);
         }
 
         /**

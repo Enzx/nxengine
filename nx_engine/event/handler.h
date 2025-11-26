@@ -27,7 +27,6 @@ namespace nx::event
         virtual void handle(const void* msg) = 0;
     };
 
-
     template <typename TAgent, typename TMessage>
     class member_function_wrapper final : public handler_base
     {
@@ -35,17 +34,16 @@ namespace nx::event
         typedef void (TAgent::*callback_func_const)(const TMessage&) const;
 
         callback_func m_function_;
-
         TAgent* m_instance_;
 
     public:
-        //constructor for non-const callback func
+        // Constructor for non-const callback func
         member_function_wrapper(const callback_func callback, TAgent* instance)
             : handler_base(), m_function_(callback), m_instance_(instance)
         {
         }
 
-        //constructor for const callback func
+        // Constructor for const callback func
         member_function_wrapper(const callback_func_const callback, const TAgent* instance)
             : handler_base(),
               m_function_(reinterpret_cast<callback_func>(callback)),
