@@ -73,14 +73,14 @@ virtual std::shared_ptr<window_interface> create_window(
 
 #### Examples:
 ```cpp
-// BAD: Silent failure in glfw_window_system.cpp
-if (glfwInit() == false)
+// BAD: Silent failure in glfw_window_system.cpp (from actual codebase)
+if (glfwInit() == false)  // Note: Using == false is less idiomatic
 {
     std::cout << "Failed to initialize the glfw system";
     // No exception thrown, execution continues!
 }
 
-// GOOD: Explicit error handling
+// GOOD: Proper error handling
 if (!glfwInit())
 {
     throw std::runtime_error("Failed to initialize GLFW");

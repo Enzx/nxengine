@@ -601,16 +601,31 @@ void get_dimensions(int& width, int& height);
 
 ### Move Semantics
 ```cpp
-// Accept by value and move when taking ownership
+// Pattern 1: Accept by value and move (good for simple cases)
 void set_name(std::string name) {
     name_ = std::move(name);
+}
+
+// Pattern 2: Provide both overloads for optimal performance
+void set_name(const std::string& name) {  // For lvalues - copy
+    name_ = name;
+}
+
+void set_name(std::string&& name) {       // For rvalues - move
+    name_ = std::move(name);
+}
+
+// Pattern 3: Perfect forwarding (template contexts)
+template<typename T>
+void set_value(T&& value) {
+    value_ = std::forward<T>(value);
 }
 
 // Return large objects by value (RVO/NRVO will optimize)
 std::vector<int> create_data() {
     std::vector<int> data;
     // populate...
-    return data;  // No std::move needed
+    return data;  // No std::move needed - return value optimization
 }
 ```
 
